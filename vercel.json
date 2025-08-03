@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "builds": [
+        {"src": "workout-tracker-backend/server.mjs", "use": "@vercel/node"},
+        {"src": "dist/**", "use": "@vercel/static"}
+    ],
+    "routes": [
+        {"src": "/api/(.*)", "dest": "api/server.mjs"},
+        {"src": "/(.*)", "dest": "dist/$1"}
+    ]
+}
