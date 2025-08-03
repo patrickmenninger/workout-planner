@@ -12,8 +12,10 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.53.0",
     "@tailwindcss/vite": "^4.1.11",
+    "axios": "^1.11.0",
     "bootstrap": "^5.3.7",
     "dexie": "^4.0.11",
+    "dotenv": "^17.2.1",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
