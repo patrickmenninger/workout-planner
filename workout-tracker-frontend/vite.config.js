@@ -7,8 +7,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     define: {
-        "VITE_SUPABASE_URL": process.env.VITE_SUPABASE_URL,
-        "VITE_SUPABASE_KEY": process.env.VITE_SUPABASE_KEY,
+        "VITE_SUPABASE_URL": JSON.stringify(process.env.VITE_SUPABASE_URL),
+        "VITE_SUPABASE_KEY": JSON.stringify(process.env.VITE_SUPABASE_KEY),
     },
     plugins: [react(), tailwindcss()],
     server: {
