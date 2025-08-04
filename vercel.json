@@ -5,7 +5,7 @@
         {"src": "dist/**", "use": "@vercel/static"}
     ],
     "routes": [
-        {"src": "/api/(.*)", "dest": "api/server.mjs"},
+        {"src": "/api/(.*)", "dest": "workout-tracker-backend/server.mjs"},
         
         { "src": "/assets/(.*)", "dest": "dist/assets/$1" },
         { "src": "/favicon.ico", "dest": "dist/favicon.ico" },
