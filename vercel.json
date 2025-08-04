@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {"src": "workout-tracker-backend/server.mjs", "use": "@vercel/node"},
-        {"src": "dist/**", "use": "@vercel/static"}
+        {"src": "workout-tracker-frontend/dist/**", "use": "@vercel/static"}
     ],
     "routes": [
         {"src": "/api/(.*)", "dest": "workout-tracker-backend/server.mjs"},
@@ -11,6 +11,6 @@
         { "src": "/favicon.ico", "dest": "dist/favicon.ico" },
         { "src": "/manifest.webmanifest", "dest": "dist/manifest.webmanifest" },
         
-        { "src": "/(.*)", "dest": "dist/index.html" }
+        { "src": "/(.*)", "dest": "workout-tracker-frontend/dist/index.html" }
     ]
 }
