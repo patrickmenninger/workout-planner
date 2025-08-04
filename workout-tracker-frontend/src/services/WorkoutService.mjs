@@ -5,5 +5,5 @@ export const getModelWorkoutsByUser = () => {
 }
 
 export const getWorkoutHistoryByUser = () => {
-    return axiosClient.get("/workouts/history")
+    return axiosClient.get("/workouts/history");
 }
