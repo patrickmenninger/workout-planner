@@ -6,6 +6,7 @@ import MainLayout from "./layouts/MainLayout";
 import WorkoutsPage from "./pages/WorkoutsPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import { useQueryClient } from "@tanstack/react-query";
 
 function App() {
 

@@ -1,49 +1,28 @@
 import { useEffect, useState } from "react";
+import { Card, Tab, Tabs } from "react-bootstrap";
+
 import { getModelWorkoutsByUser } from "../services/WorkoutService.mjs";
 import { getPlansByUser } from "../services/PlanService.mjs";
-import { Card, Tab, Tabs } from "react-bootstrap";
+import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
+import { usePlans } from "../hooks/usePlansData.mjs";
 
 const WorkoutsPage = () => {
 
-    const [workouts, setWorkouts] = useState();
-    const [plans, setPlans] = useState();
+    const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
+    const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
 
-    useEffect(() => {
+    // async function getMockWorkouts() {
+    //     console.log("Mocking workouts...");
+    //     setWorkouts((await import('../mocks/workouts.json')).default);
+    // }
 
-        if (import.meta.env.MODE === 'development') {
-            // getMockWorkouts();
-            // getMockPlans();
-            getAllModelWorkouts();
-            getAllPlans();
-        } else {
-            getAllModelWorkouts();
-            getAllPlans();
-        }
-    }, []);
+    // async function getMockPlans() {
+    //     console.log("Mocking plans...");
+    //     setPlans((await import('../mocks/plans.json')).default);
+    // }
 
-    async function getMockWorkouts() {
-        console.log("Mocking workouts...");
-        setWorkouts((await import('../mocks/workouts.json')).default);
-    }
-
-    async function getMockPlans() {
-        console.log("Mocking plans...");
-        setPlans((await import('../mocks/plans.json')).default);
-    }
-
-    async function getAllModelWorkouts() {
-        const res = await getModelWorkoutsByUser();
-        
-        console.log(res);
-        setWorkouts(res.data);
-    }
-
-    async function getAllPlans() {
-        const res = await getPlansByUser();
-
-        console.log(res);
-        setPlans(res.data);
-    }
+    if (workoutsLoading || plansLoading) return <div>Loading</div>
+    if (workoutsError || plansError) return <div>{workoutsError} {plansError}</div>
 
     return (
         <Tabs defaultActiveKey="plans" justify>

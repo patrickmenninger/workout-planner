@@ -1,4 +1,5 @@
 import { Container, Nav, Navbar } from "react-bootstrap"
+import { NavLink } from "react-router-dom"
 
 const NavigationBar = () => {
 
@@ -7,9 +8,9 @@ const NavigationBar = () => {
         <Navbar fixed="bottom" className="pb-5">
             <Container className="justify-content-center">
                 <Nav className="w-full justify-content-evenly">
-                    <Nav.Link href="/">Home</Nav.Link>
-                    <Nav.Link href="/workouts">Workouts</Nav.Link>
-                    <Nav.Link href="/profile">Profile</Nav.Link>
+                    <NavLink to="/">Home</NavLink>
+                    <NavLink to="/workouts">Workouts</NavLink>
+                    <NavLink to="/profile">Profile</NavLink>
                 </Nav>
             </Container>
         </Navbar>

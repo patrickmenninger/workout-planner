@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create the Axios instance
 const axiosClient = axios.create({
-  baseURL: '/api', // Replace with your backend API URL
+  baseURL: import.meta.env.MODE === "development" ? "http://localhost:3000/api" : '/api', // Replace with your backend API URL
 });
 
 // Axios interceptor to attach access token

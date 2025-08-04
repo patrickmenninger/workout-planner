@@ -1,48 +1,22 @@
 import { useEffect, useState } from "react"
 import { Card } from "react-bootstrap";
-import { getWorkoutHistoryByUser } from "../services/WorkoutService.mjs";
-import { getExerciseHistoryByUser } from "../services/ExerciseService.mjs";
+import { useWorkoutHistory } from "../hooks/useWorkoutsData.mjs";
+import { useExerciseHistory } from "../hooks/useExerciseData.mjs";
 
 const HomePage = () => {
 
-    const [workoutHistory, setWorkoutHistory] = useState();
-    const [exerciseHistory, setExerciseHistory] = useState();
+    const {data: workoutHistory, isLoading: workoutsLoading, error: workoutsError} = useWorkoutHistory();
+    const {data: exerciseHistory, isLoading: exercisesLoading, error: exercisesError} = useExerciseHistory();
 
-    useEffect(() => {
-        if (import.meta.env.MODE === "development") {
-            // getMockWorkoutHistory();
-            // getMockExerciseHistory();
-            getWorkoutHistory();
-            getExerciseHisotry();
-        } else {
-            getWorkoutHistory();
-            getExerciseHisotry();
-        }
-    }, []);
+    // async function getMockWorkoutHistory() {
+    //     console.log("Mocking Workout History...");
+    //     setWorkoutHistory((await import("../mocks/workout_history.json")).default);
+    // }
 
-    async function getWorkoutHistory() {
-        const res = await getWorkoutHistoryByUser();
-                
-        console.log(res);
-        setWorkoutHistory(res.data);
-    }
-
-    async function getExerciseHisotry() {
-        const res = await getExerciseHistoryByUser();
-
-        console.log(res);
-        setExerciseHistory(res.data);
-    }
-
-    async function getMockWorkoutHistory() {
-        console.log("Mocking Workout History...");
-        setWorkoutHistory((await import("../mocks/workout_history.json")).default);
-    }
-
-    async function getMockExerciseHistory() {
-        console.log("Mocking Exercise History...");
-        setExerciseHistory((await import("../mocks/exercise_history.json")).default);
-    }
+    // async function getMockExerciseHistory() {
+    //     console.log("Mocking Exercise History...");
+    //     setExerciseHistory((await import("../mocks/exercise_history.json")).default);
+    // }
 
   return (
     <>
