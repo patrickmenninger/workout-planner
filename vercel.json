@@ -12,6 +12,5 @@
         { "src": "/manifest.webmanifest", "dest": "workout-tracker-frontend/dist/manifest.webmanifest" },
         
         { "src": "/(.*)", "dest": "workout-tracker-frontend/dist/index.html" }
-    ],
-    "buildCommand": "cd workout-tracker-frontend && npm install && npm run build && cd ../workout-tracker-backend && npm install"
+    ]
 }
