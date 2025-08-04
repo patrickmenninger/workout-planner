@@ -15,7 +15,8 @@ const HomePage = () => {
             getWorkoutHistory();
             getExerciseHisotry();
         } else {
-
+            getWorkoutHistory();
+            getExerciseHisotry();
         }
     }, []);
 

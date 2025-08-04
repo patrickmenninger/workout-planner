@@ -16,7 +16,8 @@ const WorkoutsPage = () => {
             getAllModelWorkouts();
             getAllPlans();
         } else {
-
+            getAllModelWorkouts();
+            getAllPlans();
         }
     }, []);
 
