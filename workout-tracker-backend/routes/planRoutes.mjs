@@ -10,25 +10,26 @@ router.get('/', TokenMiddleware, async (req, res) => {
         .select(`
             *,
             plan_workouts (
+                order_index,
                 workout:workouts(*)
             )
         `)
         .eq('user_id', req.user.id)
-        .order('start_date', { ascending: false});
 
     if (error) return res.status(500).json({error: error.message});
 
-    const planWithWorkouts = data.map(plan => {
-        const updatedPlan = {
-            ...plan,
-            workouts: plan.plan_workouts.map(pw => pw.workout)
-        };
+    const cleanPlans = data.map(plan => {
+        plan.workouts = plan.plan_workouts.map(workout => {
+            const formattedWorkout = workout.workout;
+            formattedWorkout.order_index = workout.order_index;
 
-        delete updatedPlan.plan_workouts;
-        return updatedPlan;
-    });
+            return formattedWorkout;
+        });
+        delete plan.plan_workouts;
+        return plan;
+    })
 
-    res.json(planWithWorkouts);
+    res.json(cleanPlans);
 });
 
 export default router;
