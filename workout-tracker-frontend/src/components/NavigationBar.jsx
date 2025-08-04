@@ -1,11 +1,13 @@
 import { Container, Nav, Navbar } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
+import ActiveWorkout from "./ActiveWorkout"
 
 const NavigationBar = () => {
 
   return (
     <Container>
-        <Navbar fixed="bottom" className="pb-5">
+        <Navbar fixed="bottom" className="pb-5 flex-column">
+            <ActiveWorkout />
             <Container className="justify-content-center">
                 <Nav className="w-full justify-content-evenly">
                     <NavLink to="/">Home</NavLink>

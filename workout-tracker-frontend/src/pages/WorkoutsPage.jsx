@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Card, Tab, Tabs } from "react-bootstrap";
+import { Button, Card, Tab, Tabs } from "react-bootstrap";
 
-import { getModelWorkoutsByUser } from "../services/WorkoutService.mjs";
-import { getPlansByUser } from "../services/PlanService.mjs";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlans } from "../hooks/usePlansData.mjs";
+import { useActiveWorkout } from "../context/ActiveWorkoutContext";
 
 const WorkoutsPage = () => {
+
+    const {startWorkout} = useActiveWorkout();
 
     const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
     const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
@@ -25,6 +26,7 @@ const WorkoutsPage = () => {
     if (workoutsError || plansError) return <div>{workoutsError} {plansError}</div>
 
     return (
+        <>
         <Tabs defaultActiveKey="plans" justify>
             <Tab eventKey="plans" title="Plans">
                 {
@@ -50,21 +52,13 @@ const WorkoutsPage = () => {
                                 .sort((a, b) => a.exercise.order_index - b.exercise.order_index)
                                 .map(exercise => <div key={workout.id + " " + exercise.exercise.id} className="text-sm">{exercise.model.name} {exercise.exercise.reps} {exercise.exercise.sets} {exercise.exercise.distance}</div>)
                         }
+                        <Button onClick={() => startWorkout(workout)}>Start Workout</Button>
                     </Card>
                 )
                 }
             </Tab>
         </Tabs>
-        // <>
-        //     <h1>
-        //         Plans
-        //         
-        //     </h1>
-        //     <h1>
-        //         Workouts
-        //         
-        //     </h1>
-        // </>
+        </>
     )
 }
 
