@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getModelWorkoutsByUser } from "../services/WorkoutService.mjs";
 import { getPlansByUser } from "../services/PlanService.mjs";
-import { Card } from "react-bootstrap";
+import { Card, Tab, Tabs } from "react-bootstrap";
 
 const WorkoutsPage = () => {
 
@@ -9,10 +9,25 @@ const WorkoutsPage = () => {
     const [plans, setPlans] = useState();
 
     useEffect(() => {
-        getAllModelWorkouts();
-        getAllPlans();
-        console.log(workouts);
+
+        if (import.meta.env.MODE === 'development') {
+            getMockWorkouts();
+            getMockPlans();
+        } else {
+            getAllModelWorkouts();
+            getAllPlans();
+        }
     }, []);
+
+    async function getMockWorkouts() {
+        console.log("Mocking workouts...");
+        setWorkouts((await import('../mocks/workouts.json')).default);
+    }
+
+    async function getMockPlans() {
+        console.log("Mocking plans...");
+        setPlans((await import('../mocks/plans.json')).default);
+    }
 
     async function getAllModelWorkouts() {
         const res = await getModelWorkoutsByUser();
@@ -29,24 +44,22 @@ const WorkoutsPage = () => {
     }
 
     return (
-        <>
-            <h1>
-                Plans
+        <Tabs defaultActiveKey="plans" justify>
+            <Tab eventKey="plans" title="Plans">
                 {
-                    plans && plans.map(plan =>
-                        <Card key={plan.id}>
-                            <h5>{plan.name}</h5>
-                            {
-                                plan.workouts
-                                    .sort((a, b) => a.order_index - b.order_index)
-                                    .map(workout => <div key={plan.id + " " + workout.id} className="text-sm">{workout.name}</div>)
-                            }
-                        </Card>
-                    )
+                plans && plans.map(plan =>
+                    <Card key={plan.id}>
+                        <h5>{plan.name}</h5>
+                        {
+                            plan.workouts
+                                .sort((a, b) => a.order_index - b.order_index)
+                                .map(workout => <div key={plan.id + " " + workout.id} className="text-sm">{workout.name}</div>)
+                        }
+                    </Card>
+                )
                 }
-            </h1>
-            <h1>
-                Workouts
+            </Tab>
+            <Tab eventKey="workouts" title="Workouts">
                 {
                 workouts && workouts.map(workout => 
                     <Card key={workout.id}>
@@ -59,8 +72,18 @@ const WorkoutsPage = () => {
                     </Card>
                 )
                 }
-            </h1>
-        </>
+            </Tab>
+        </Tabs>
+        // <>
+        //     <h1>
+        //         Plans
+        //         
+        //     </h1>
+        //     <h1>
+        //         Workouts
+        //         
+        //     </h1>
+        // </>
     )
 }
 
