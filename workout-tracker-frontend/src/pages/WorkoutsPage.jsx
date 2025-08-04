@@ -11,11 +11,12 @@ const WorkoutsPage = () => {
     useEffect(() => {
 
         if (import.meta.env.MODE === 'development') {
-            getMockWorkouts();
-            getMockPlans();
-        } else {
+            // getMockWorkouts();
+            // getMockPlans();
             getAllModelWorkouts();
             getAllPlans();
+        } else {
+
         }
     }, []);
 
@@ -50,11 +51,11 @@ const WorkoutsPage = () => {
                 plans && plans.map(plan =>
                     <Card key={plan.id}>
                         <h5>{plan.name}</h5>
-                        {
+                        {/* {
                             plan.workouts
                                 .sort((a, b) => a.order_index - b.order_index)
                                 .map(workout => <div key={plan.id + " " + workout.id} className="text-sm">{workout.name}</div>)
-                        }
+                        } */}
                     </Card>
                 )
                 }

@@ -16,7 +16,7 @@ router.get('/', TokenMiddleware, async (req, res) => {
 });
 
 // Get a users exercise history
-router.get('/:exerciseId/history', TokenMiddleware, async (req, res) => {
+router.get('/history', TokenMiddleware, async (req, res) => {
     const {data, error} = await supabase
         .from('exercise_history')
         .select(`
@@ -24,7 +24,6 @@ router.get('/:exerciseId/history', TokenMiddleware, async (req, res) => {
             model: exercises(*)
         `)
         .eq('user_id', req.user.id)
-        .eq('exercise_id', req.params.exerciseId);
 
     if (error) return res.status(500).json({error: error.message});
 
