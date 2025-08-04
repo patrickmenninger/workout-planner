@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {"src": "workout-tracker-backend/server.mjs", "use": "@vercel/node"},
-        {"src": "workout-tracker-frontend/dist/**", "use": "@vercel/static"}
+        {"src": "workout-tracker-frontend/package.json", "use": "@vercel/static-build", "config": {"distDir": "dist"}}
     ],
     "routes": [
         {"src": "/api/(.*)", "dest": "workout-tracker-backend/server.mjs"},
