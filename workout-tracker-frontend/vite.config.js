@@ -11,11 +11,11 @@ export default defineConfig(({ mode }) => {
         "VITE_SUPABASE_KEY": JSON.stringify(process.env.VITE_SUPABASE_KEY),
     },
     plugins: [react(), tailwindcss()],
-    // builds: {
-    //     outDir: "dist",
-    //     assetsDir: "assets",
-    //     emptyOutDir: true
-    // },
+    builds: {
+        outDir: "dist",
+        assetsDir: "assets",
+        emptyOutDir: true
+    },
     server: {
         host: '0.0.0.0',
         port: 5173,

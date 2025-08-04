@@ -2,15 +2,15 @@
     "version": 2,
     "builds": [
         {"src": "workout-tracker-backend/server.mjs", "use": "@vercel/node"},
-        {"src": "workout-tracker-frontend/package.json", "use": "@vercel/static-build"}
+        {"src": "workout-tracker-frontend/package.json", "use": "@vercel/static-build", "config": {"distDir": "dist"}}
     ],
     "routes": [
         {"src": "/api/(.*)", "dest": "workout-tracker-backend/server.mjs"},
         
-        { "src": "/assets/(.*)", "dest": "workout-tracker-frontend/dist/assets/$1" },
-        { "src": "/favicon.ico", "dest": "workout-tracker-frontend/dist/favicon.ico" },
-        { "src": "/manifest.webmanifest", "dest": "workout-tracker-frontend/dist/manifest.webmanifest" },
+        { "src": "/assets/(.*)", "dest": "workout-tracker-frontend/assets/$1" },
+        { "src": "/favicon.ico", "dest": "workout-tracker-frontend/favicon.ico" },
+        { "src": "/manifest.webmanifest", "dest": "workout-tracker-frontend/manifest.webmanifest" },
         
-        { "src": "/(.*)", "dest": "workout-tracker-frontend/dist/index.html" }
+        { "src": "/(.*)", "dest": "workout-tracker-frontend/index.html" }
     ]
 }
