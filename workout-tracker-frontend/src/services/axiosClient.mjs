@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { useAuth } from '../context/AuthProvider'; // Import the AuthProvider context
 
 // Create the Axios instance
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:3000/api', // Replace with your backend API URL
+  baseURL: '/api', // Replace with your backend API URL
 });
 
 // Axios interceptor to attach access token
