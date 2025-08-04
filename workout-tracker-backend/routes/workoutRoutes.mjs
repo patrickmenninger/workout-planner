@@ -37,4 +37,40 @@ router.get('/', TokenMiddleware, async (req, res) => {
     res.json(cleanWorkouts);
 });
 
+router.get('/history', TokenMiddleware, async (req, res) => {
+    const {data, error} = await supabase
+        .from('workout_history')
+        .select('*')
+        .eq('user_id', req.user.id);
+
+    if (error) return res.status(500).json({error: error.message});
+
+    const workoutHistory = data;
+    console.log(workoutHistory);
+
+    const workoutAndExerciseHistory = await Promise.all(
+            workoutHistory.map(async (workout) => {
+
+            const {data, error} = await supabase
+                .from('exercise_history')
+                .select(`
+                    *,
+                    model: exercises(*)
+                `)
+                .eq('user_id', req.user.id)
+                .eq('user_workout_id', workout.id);
+
+            if (error) return res.status(500).json({error: error.message});
+
+            workout.exercises = data;
+            return workout;
+
+        })
+    );
+
+    console.log(workoutAndExerciseHistory);
+    res.json(workoutAndExerciseHistory);
+
+})
+
 export default router;
