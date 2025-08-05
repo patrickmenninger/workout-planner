@@ -6,7 +6,9 @@ import MainLayout from "./layouts/MainLayout";
 import WorkoutsPage from "./pages/WorkoutsPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import { useQueryClient } from "@tanstack/react-query";
+import PlanPage from "./pages/PlanPage";
+
+import "./index.css"
 
 function App() {
 
@@ -16,6 +18,7 @@ function App() {
             <Route path="/" element={<AuthenticatedRoute><MainLayout/></AuthenticatedRoute>}>
                 <Route path="/" element={<HomePage />}/>
                 <Route path="/workouts" element={<WorkoutsPage />}/>
+                <Route path="/plan/:id" element={<PlanPage />}/>
             </Route>
             <Route path="/login" element={<LoginPage />}/>
         </Routes>

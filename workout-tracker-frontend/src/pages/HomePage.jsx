@@ -8,16 +8,6 @@ const HomePage = () => {
     const {data: workoutHistory, isLoading: workoutsLoading, error: workoutsError} = useWorkoutHistory();
     const {data: exerciseHistory, isLoading: exercisesLoading, error: exercisesError} = useExerciseHistory();
 
-    // async function getMockWorkoutHistory() {
-    //     console.log("Mocking Workout History...");
-    //     setWorkoutHistory((await import("../mocks/workout_history.json")).default);
-    // }
-
-    // async function getMockExerciseHistory() {
-    //     console.log("Mocking Exercise History...");
-    //     setExerciseHistory((await import("../mocks/exercise_history.json")).default);
-    // }
-
   return (
     <>
         {

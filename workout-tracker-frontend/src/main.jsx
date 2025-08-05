@@ -10,7 +10,7 @@ import { ActiveWorkoutProvider } from './context/ActiveWorkoutContext.jsx';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+//   <StrictMode>
     <AuthProvider>
         <ActiveWorkoutProvider>
             <QueryClientProvider client={queryClient}>
@@ -18,5 +18,5 @@ createRoot(document.getElementById('root')).render(
             </QueryClientProvider>
         </ActiveWorkoutProvider>
     </AuthProvider>
-  </StrictMode>,
+//   </StrictMode>,
 )

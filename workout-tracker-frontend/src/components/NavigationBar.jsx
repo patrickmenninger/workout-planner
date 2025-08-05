@@ -5,7 +5,7 @@ import ActiveWorkout from "./ActiveWorkout"
 const NavigationBar = () => {
 
   return (
-    <Container>
+    <Container className="bg-white">
         <Navbar fixed="bottom" className="pb-5 flex-column">
             <ActiveWorkout />
             <Container className="justify-content-center">

@@ -22,11 +22,8 @@ const Workout = ({workout}) => {
                                 <div key={workout.id + " " + exercise.info.id} className="flex justify-content-between">
                                     <span className={exercise.info.time && exercise.info.distance ? "self-center" : ""}>{exercise.model.name}</span>
                                     <div>
-                                        {exercise.info.sets && <span>Sets: {exercise.info.sets}</span>}
-                                        <div>
-                                            {exercise.info.time && <div>Time: {(exercise.info.time) / 60} Minutes</div>}
-                                            {exercise.info.distance && <div>Distance: {exercise.info.distance} Miles</div>}
-                                        </div>
+                                        {exercise.info.reps && <span>Sets: {exercise.info.reps.length}</span>}
+                                        {exercise.info.time && <span>Sets: {exercise.info.time.length}</span>}
                                     </div>
                                 </div>
                             )
