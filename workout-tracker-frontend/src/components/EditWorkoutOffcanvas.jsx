@@ -1,5 +1,5 @@
 import { Offcanvas, Button } from 'react-bootstrap'
-import { useActiveWorkout } from '../context/ActiveWorkoutContext';
+import { useEditWorkout } from '../context/WorkoutContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import EditWorkout from './EditWorkout';
@@ -9,24 +9,15 @@ const EditWorkoutOffcanvas = () => {
     // For handling active workout off canvas
     const {
         workoutData, 
-        endWorkout, 
+        endWorkout,
+        saveWorkout, 
         stopWorkout, 
         closeOffcanvas, 
         isOpen, 
         openOffcanvas,
         editMode,
         editWorkout
-    } = useActiveWorkout();
-
-    
-    function handleSave() {
-        stopWorkout();
-        if (editMode === "pre-session") {
-            console.log("SAVING");
-        } else if (editMode === "create") {
-            console.log("CREATING NEW");
-        }
-    };
+    } = useEditWorkout();
 
     const title = editMode === 'in-session' ? workoutData?.name : editWorkout?.name || 'New Workout';
     const showResume = workoutData || editWorkout;
@@ -41,10 +32,10 @@ const EditWorkoutOffcanvas = () => {
             </Offcanvas.Header>
             <Offcanvas.Body>
                 {editMode === "in-session" && (<Button onClick={endWorkout}>Finish Workout</Button>)}
-                {editMode !== 'in-session' && <Button onClick={handleSave}>Save Workout</Button>}
+                {editMode !== 'in-session' && <Button onClick={saveWorkout}>Save Workout</Button>}
                 <EditWorkout mode={editMode} initialWorkout={editWorkout}/>
                 {editMode === "in-session" && (<Button onClick={stopWorkout}>Cancel Workout</Button>)}
-                {editMode !== "in-session" && (<Button onClick={stopWorkout}>Discard Workout</Button>)}
+                {editMode !== "in-session" && (<Button onClick={stopWorkout}>Discard</Button>)}
             </Offcanvas.Body>
         </Offcanvas>
         </>

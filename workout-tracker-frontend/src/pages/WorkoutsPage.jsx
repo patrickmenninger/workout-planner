@@ -4,13 +4,13 @@ import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlans } from "../hooks/usePlansData.mjs";
 import Workout from "../components/Workout";
 import { NavLink } from "react-router-dom";
-import { useActiveWorkout } from "../context/ActiveWorkoutContext";
+import { useEditWorkout } from "../context/WorkoutContext";
 
 const WorkoutsPage = () => {
 
     const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
     const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
-    const {openForEdit} = useActiveWorkout();
+    const {openForEdit} = useEditWorkout();
 
     const handleEditWorkout = (workout) => {
         console.log("EDITING");
@@ -19,7 +19,7 @@ const WorkoutsPage = () => {
 
     const handleCreateWorkout = () => {
         console.log("CREATING");
-        openForEdit('create', { name: 'New Workout', exercises: [] });
+        openForEdit('create', { name: 'New Workout', notes: "", exercises: [] });
     };
 
     if (workoutsLoading || plansLoading) return <div>Loading</div>

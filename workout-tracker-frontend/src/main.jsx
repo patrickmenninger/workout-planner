@@ -5,18 +5,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthProvider.jsx';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import { ActiveWorkoutProvider } from './context/ActiveWorkoutContext.jsx';
+import { WorkoutProvider } from './context/WorkoutContext.jsx';
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
 //   <StrictMode>
     <AuthProvider>
-        <ActiveWorkoutProvider>
-            <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+            <WorkoutProvider>
                 <App />
-            </QueryClientProvider>
-        </ActiveWorkoutProvider>
+            </WorkoutProvider>
+        </QueryClientProvider>
     </AuthProvider>
 //   </StrictMode>,
 )

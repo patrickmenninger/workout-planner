@@ -1,9 +1,9 @@
 import { Card, Button } from "react-bootstrap"
-import { useActiveWorkout } from "../context/ActiveWorkoutContext"
+import { useEditWorkout } from "../context/WorkoutContext"
 
 const Workout = ({workout}) => {
 
-    const {startWorkout} = useActiveWorkout();
+    const {startWorkout} = useEditWorkout();
 
     return (
         <Card key={workout.id} className="my-3 py-3 px-2">

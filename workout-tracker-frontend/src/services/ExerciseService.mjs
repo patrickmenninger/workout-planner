@@ -1,5 +1,9 @@
 import axiosClient from "./axiosClient.mjs";
 
+export const getExercises = () => {
+    return axiosClient.get("/exercises");
+}
+
 export const getExerciseHistoryByUser = () => {
     return axiosClient.get("/exercises/history")
 }

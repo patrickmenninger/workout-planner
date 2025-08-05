@@ -14,7 +14,7 @@ export const useWorkouts = () =>
 
 export const useWorkoutHistory = () =>
     useQuery({
-        queryKey: ['workout-history'],
+        queryKey: ['workout_history'],
         queryFn: async () => {
             console.log("Fetching workout history...");
             const { data } = await getWorkoutHistoryByUser();
