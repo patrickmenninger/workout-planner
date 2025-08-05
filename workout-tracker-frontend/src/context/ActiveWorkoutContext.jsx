@@ -9,6 +9,8 @@ export const ActiveWorkoutProvider = ({ children }) => {
   const [workoutSession, setWorkoutSession] = useState(null);
   const [exerciseSession, setExerciseSession] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [editMode, setEditMode] = useState('in-session');
+  const [editWorkout, setEditWorkout] = useState(null);
 
   const startWorkout = (workout) => {
     
@@ -26,25 +28,37 @@ export const ActiveWorkoutProvider = ({ children }) => {
     const currExerciseSession = workoutCopy.exercises.map(exercise => {
 
         return {
-            exercise_id: exercise.model.id,
-            user_workout_id: "",
-            user_id: workoutCopy.user_id,
-            notes: "",
-            time: exercise.info.time ? [...exercise.info.time] : null,
-            distance: exercise.info.distance ? [...exercise.info.distance] : null,
-            date: (new Date()).toISOString().split("T")[0],
-            weight: Array(exercise.info.reps).fill(null),
-            reps: exercise.info.reps ? [...exercise.info.reps] : null,
-            rpe: exercise.info.rpe ? [...exercise.info.rpe] : null,
-            sets: exercise.info.sets,
-            rest_timer: exercise.info.rest_timer,
-            order_index: exercise.info.order_index
+            model: {
+                name: exercise.model.name,
+                exercise_id: exercise.model.id,
+            },
+            info: {
+                user_workout_id: "",
+                user_id: workoutCopy.user_id,
+                notes: "",
+                time: exercise.info.time ? [...exercise.info.time] : null,
+                distance: exercise.info.distance ? [...exercise.info.distance] : null,
+                date: (new Date()).toISOString().split("T")[0],
+                weight: Array(exercise.info.reps).fill(null),
+                reps: exercise.info.reps ? [...exercise.info.reps] : null,
+                rpe: exercise.info.rpe ? [...exercise.info.rpe] : null,
+                sets: exercise.info.sets,
+                rest_timer: exercise.info.rest_timer,
+                order_index: exercise.info.order_index,
+            }
         }
     });
     setExerciseSession(currExerciseSession);
-
+    setEditMode('in-session');
+    setEditWorkout(null);
     setIsOpen(true);
   };
+
+  const openForEdit = (mode, workout) => {
+    setEditMode(mode);
+    setEditWorkout(workout);
+    setIsOpen(true);
+  }
 
   const openOffcanvas = () => setIsOpen(true);
   const closeOffcanvas = () => setIsOpen(false);
@@ -54,6 +68,8 @@ export const ActiveWorkoutProvider = ({ children }) => {
     setIsOpen(false);
     setWorkoutSession(null);
     setExerciseSession(null);
+    setEditMode('in-session');
+    setEditWorkout(null);
   }
 
   const endWorkout = async () => {
@@ -72,10 +88,12 @@ export const ActiveWorkoutProvider = ({ children }) => {
     (exerciseSession);
     await finishExercises(exerciseSession);
 
-    setWorkoutData(() => null);
-    setWorkoutSession(() => null);
-    setExerciseSession(() => null);
+    setWorkoutData(null);
+    setWorkoutSession(null);
+    setExerciseSession(null);
     setIsOpen(false);
+    setEditMode('in-session');
+    setEditWorkout(null);
   };
 
   return (
@@ -84,7 +102,10 @@ export const ActiveWorkoutProvider = ({ children }) => {
         workoutData,
         exerciseSession,
         isOpen,
+        editMode,
+        editWorkout,
         startWorkout,
+        openForEdit,
         openOffcanvas,
         closeOffcanvas,
         endWorkout,
