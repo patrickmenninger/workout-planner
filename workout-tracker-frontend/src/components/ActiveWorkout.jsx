@@ -6,7 +6,7 @@ import { useActiveWorkout } from '../context/ActiveWorkoutContext';
 const ActiveWorkout = () => {
 
     // For handling active workout off canvas
-    const {workoutData, endWorkout, closeOffcanvas, isOpen, openOffcanvas} = useActiveWorkout();
+    const {workoutData, endWorkout, stopWorkout, closeOffcanvas, isOpen, openOffcanvas, workoutSession, exerciseSession} = useActiveWorkout();
 
     return (
         <>
@@ -14,15 +14,22 @@ const ActiveWorkout = () => {
         {
         workoutData && <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%"}}>
             <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+                <Offcanvas.Title>{workoutData.name}</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-            Some text as placeholder. In real life you can have the elements you
-            have chosen. Like, text, images, lists, etc.
+            <Button onClick={endWorkout}>Finish Workout</Button>
+            {
+                workoutData && workoutData.exercises.map(exercise => {
+                    return (
+                        <div key={exercise.info.id}>
+                            <div>{exercise.model.name}</div>
+                            <div>{JSON.stringify(exercise.info.weight)} {JSON.stringify(exercise.info.reps)} {exercise.info.sets} {exercise.info.distance} {exercise.info.time}</div>
+                        </div>
+                    )
+                })
+            }
 
-            {JSON.stringify(workoutData)}
-
-            <Button onClick={endWorkout}>Cancel Workout</Button>
+            <Button onClick={stopWorkout}>Cancel Workout</Button>
             </Offcanvas.Body>
         </Offcanvas>
         }

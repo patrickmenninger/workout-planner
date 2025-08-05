@@ -23,9 +23,9 @@ router.get('/', TokenMiddleware, async (req, res) => {
         workout.exercises = workout.workout_exercises.map(exercise => {
             const formattedExercise = {};
             formattedExercise.model = exercise.exercise
-            formattedExercise.exercise = exercise;
+            formattedExercise.info = exercise;
 
-            delete formattedExercise.exercise.exercise;
+            delete formattedExercise.info.exercise;
 
             return formattedExercise;
         });
@@ -46,7 +46,6 @@ router.get('/history', TokenMiddleware, async (req, res) => {
     if (error) return res.status(500).json({error: error.message});
 
     const workoutHistory = data;
-    console.log(workoutHistory);
 
     const workoutAndExerciseHistory = await Promise.all(
             workoutHistory.map(async (workout) => {
@@ -68,8 +67,25 @@ router.get('/history', TokenMiddleware, async (req, res) => {
         })
     );
 
-    console.log(workoutAndExerciseHistory);
     res.json(workoutAndExerciseHistory);
+
+});
+
+router.post("/history", TokenMiddleware, async (req, res) => {
+    const {data, error} = await supabase
+        .from("workout_history")
+        .insert({
+            user_id: req.user.id, 
+            start_date: req.body.start_date, 
+            end_date: req.body.end_date, 
+            notes: req.body.notes, 
+            workout_name: req.body.workout_name
+        })
+        .select()
+
+    if (error) return res.status(500).json({error: error.message});
+
+    res.status(201).send(data[0].id);
 
 })
 

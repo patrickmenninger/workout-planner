@@ -7,3 +7,7 @@ export const getModelWorkoutsByUser = () => {
 export const getWorkoutHistoryByUser = () => {
     return axiosClient.get("/workouts/history");
 }
+
+export const finishWorkout = (workoutSession) => {
+    return axiosClient.post("/workouts/history", workoutSession);
+}

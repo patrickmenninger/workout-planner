@@ -49,8 +49,8 @@ const WorkoutsPage = () => {
                         <h5>{workout.name}</h5>
                         {
                             workout.exercises
-                                .sort((a, b) => a.exercise.order_index - b.exercise.order_index)
-                                .map(exercise => <div key={workout.id + " " + exercise.exercise.id} className="text-sm">{exercise.model.name} {exercise.exercise.reps} {exercise.exercise.sets} {exercise.exercise.distance}</div>)
+                                .sort((a, b) => a.info.order_index - b.info.order_index)
+                                .map(exercise => <div key={workout.id + " " + exercise.info.id} className="text-sm">{exercise.model.name} {JSON.stringify(exercise.info.reps)} {JSON.stringify(exercise.info.sets)} {exercise.info.distance}</div>)
                         }
                         <Button onClick={() => startWorkout(workout)}>Start Workout</Button>
                     </Card>

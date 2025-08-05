@@ -29,6 +29,17 @@ router.get('/history', TokenMiddleware, async (req, res) => {
 
     res.json(data);
 
+});
+
+router.post('/history', TokenMiddleware, async (req, res) => {
+    // take array of exercise history and update
+    const {error} = await supabase
+        .from("exercise_history")
+        .insert(req.body);
+
+    if (error) return res.status(500).json({error: error.message});
+
+    res.sendStatus(201);
 })
 
 export default router;
