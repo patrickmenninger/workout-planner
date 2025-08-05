@@ -4,6 +4,7 @@ import { Button, Card, Tab, Tabs } from "react-bootstrap";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlans } from "../hooks/usePlansData.mjs";
 import { useActiveWorkout } from "../context/ActiveWorkoutContext";
+import Workout from "../components/Workout";
 
 const WorkoutsPage = () => {
 
@@ -44,17 +45,9 @@ const WorkoutsPage = () => {
             </Tab>
             <Tab eventKey="workouts" title="Workouts">
                 {
-                workouts && workouts.map(workout => 
-                    <Card key={workout.id}>
-                        <h5>{workout.name}</h5>
-                        {
-                            workout.exercises
-                                .sort((a, b) => a.info.order_index - b.info.order_index)
-                                .map(exercise => <div key={workout.id + " " + exercise.info.id} className="text-sm">{exercise.model.name} {JSON.stringify(exercise.info.reps)} {JSON.stringify(exercise.info.sets)} {exercise.info.distance}</div>)
-                        }
-                        <Button onClick={() => startWorkout(workout)}>Start Workout</Button>
-                    </Card>
-                )
+                    workouts && workouts.map(workout => 
+                        <Workout key={workout.id} workout={workout}/>
+                    )
                 }
             </Tab>
         </Tabs>
