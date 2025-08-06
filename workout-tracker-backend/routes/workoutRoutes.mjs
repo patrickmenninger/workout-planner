@@ -136,7 +136,7 @@ router.put("/:id", TokenMiddleware, async (req, res) => {
             .insert(newWorkoutExercises)
             .select();
 
-        if (insertError) return res.status(500).json({error: error.message});
+        if (insertError) return res.status(500).json({error: insertError.message});
         insertData = data;
 
         // Update old exercises
@@ -146,7 +146,7 @@ router.put("/:id", TokenMiddleware, async (req, res) => {
             .from("workout_exercises")
             .upsert(updatedWorkoutExercises, {onConflict: 'id'});
 
-        if (updateError) return res.status(500).json({error: error.message});
+        if (updateError) return res.status(500).json({error: updateError.message});
 
     }
 

@@ -162,7 +162,6 @@ export const WorkoutProvider = ({ children }) => {
             }
         })
 
-        console.log({formattedWorkout, id: editWorkout.id});
         // Call Route in update workout mutation, invalidate all queries
         updateWorkoutMutation.mutate({workout: formattedWorkout.workout, exercises: formattedWorkout.exercises, id: editWorkout.id});
 
@@ -186,6 +185,7 @@ export const WorkoutProvider = ({ children }) => {
   const endWorkout = async () => {
 
     // Save to the db
+    console.log(workoutSession);
     workoutSession.end_date = (new Date()).toISOString();
     const workoutHistoryId = await workoutHistoryMutation.mutateAsync(workoutSession);
 
@@ -228,6 +228,7 @@ export const WorkoutProvider = ({ children }) => {
         saveWorkout,
         stopWorkout,
         setExerciseSession,
+        setWorkoutSession,
         setEditWorkout
       }}
     >

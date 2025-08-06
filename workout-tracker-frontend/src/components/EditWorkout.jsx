@@ -5,6 +5,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { getExercises } from '../services/ExerciseService.mjs';
 import { useAuth } from '../context/AuthProvider';
+import AddExercise from './AddExercise';
 
 const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
@@ -100,32 +101,31 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
     }
 
-    async function addExercise() {
+    async function addExercises(exercises) {
 
-        const exercises = (await getExercises()).data;
-
-        const newExercise = {
-            model: {
-                name: exercises[0].name,
-                id: exercises[0].id,
-            },
-            info: {
-                user_id: user.id,
-                notes: "",
-                time: null,
-                distance: null,
-                weight: [],
-                reps: [],
-                rpe: [],
-                rest_timer: 60,
-                order_index: workout.length + 1,
+        let orderIdx = workout.length;
+        const newExercises = exercises.map(exercise => {
+            return {
+                model: {
+                    name: exercise.name,
+                    id: exercise.id,
+                },
+                info: {
+                    user_id: user.id,
+                    notes: "",
+                    time: null,
+                    distance: null,
+                    weight: [],
+                    reps: [],
+                    rpe: [],
+                    rest_timer: 60,
+                    order_index: ++orderIdx,
+                }
             }
-        }
+        });
 
-        const updatedWorkout = [...workout, newExercise];
+        const updatedWorkout = [...workout, ...newExercises];
         setWorkout(updatedWorkout);
-
-        console.log(updatedWorkout);
 
         if (mode === 'in-session') {
             setExerciseSession(updatedWorkout);
@@ -214,9 +214,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
                 })
             }
             <Container className="justify-content-center flex">
-                <Button size="sm" className="w-100" onClick={addExercise}>
-                + Add Exercise
-                </Button>
+                <AddExercise addExercises={addExercises}/>
             </Container>
         </>
     )
