@@ -43,7 +43,7 @@ export const WorkoutProvider = ({ children }) => {
         const formattedWorkoutExercises = workoutExercises.map(exercise => {
             return {
                 workout_id: id,
-                exercise_id: exercise.model.exercise_id,
+                exercise_id: exercise.model.id,
                 notes: exercise.info.notes,
                 order_index: exercise.info.order_index,
                 reps: exercise.info.reps,
@@ -168,7 +168,6 @@ export const WorkoutProvider = ({ children }) => {
     } else if (editMode === "create") {
 
         // Create workout
-        console.log(editWorkout);
         const newWorkout = {
             user_id: editWorkout.exercises[0].info.user_id,
             notes: editWorkout.notes,

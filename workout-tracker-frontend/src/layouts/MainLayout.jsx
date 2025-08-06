@@ -4,10 +4,14 @@ import NavigationBar from '../components/NavigationBar'
 
 const MainLayout = () => {
   return (
-    <>
-        <Outlet />
-        <NavigationBar />
-    </>
+    <div className="h-100 flex flex-col">
+        <div className="overflow-y-auto pb-20">
+            <Outlet />
+        </div>
+        <div>
+            <NavigationBar />
+        </div>
+    </div>
   )
 }
 

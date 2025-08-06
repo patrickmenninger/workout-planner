@@ -50,7 +50,6 @@ router.post("/", TokenMiddleware, async (req, res) => {
 });
 
 router.post("/:id/exercises", TokenMiddleware, async (req, res) => {
-    console.log("hit");
     const {error} = await supabase
         .from("workout_exercises")
         .insert(req.body)
