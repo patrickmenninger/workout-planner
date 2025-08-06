@@ -114,6 +114,7 @@ router.post("/history", TokenMiddleware, async (req, res) => {
 
 router.put("/:id", TokenMiddleware, async (req, res) => {
 
+    // Edit workout info
     if (req.body.workout.name || req.body.workout.notes) {
         const {error} = await supabase
             .from("workouts")
@@ -123,31 +124,48 @@ router.put("/:id", TokenMiddleware, async (req, res) => {
         if (error) return res.status(500).json({error: error.message});
     }
 
-    if (req.body.old_exercises) {
-        const updates = req.body.old_exercises.map(exercise => {
-            const { id, ...fieldsToUpdate } = exercise;
+    // Edit exercise info
+    let insertData;
+    if (req.body.exercises) {
 
-            return supabase
-                .from("workout_exercises")
-                .update(fieldsToUpdate)
-                .eq("id", id);
-        });
+        // Add new exercises
+        const newWorkoutExercises = req.body.exercises.filter(exercise => !exercise.id);
 
-        const results = await Promise.all(updates);
-
-        // Check for errors
-        results.forEach(({ error }, i) => {
-            if (error) return res.status(500).json({error: error.message});
-        });
-    }
-
-    if (req.body.new_exercises) {
-        const {error} = await supabase
+        const {data, error: insertError} = await supabase
             .from("workout_exercises")
-            .insert(req.body.new_exercises);
+            .insert(newWorkoutExercises)
+            .select();
 
-        if (error) return res.status(500).json({error: error.message});
+        if (insertError) return res.status(500).json({error: error.message});
+        insertData = data;
+
+        // Update old exercises
+        const updatedWorkoutExercises = req.body.exercises.filter(exercise => exercise.id);
+
+        const {error: updateError} = await supabase
+            .from("workout_exercises")
+            .upsert(updatedWorkoutExercises, {onConflict: 'id'});
+
+        if (updateError) return res.status(500).json({error: error.message});
+
     }
+
+    // Delete exercises
+    const exerciseIds = req.body.exercises
+        .filter(exercise => exercise.id)
+        .map(exercise => exercise.id);
+
+    const createdWorkoutExerciseIds = insertData.map(exercise => exercise.id);
+
+    const combinedIds = exerciseIds.concat(createdWorkoutExerciseIds);
+
+    const {error} = await supabase
+        .from("workout_exercises")
+        .delete()
+        .not("id", "in", `(${combinedIds.join(',')})`)
+        .eq("workout_id", req.params.id)
+
+    if (error) return res.status(500).json({error: error.message});
 
     res.sendStatus(200);
     

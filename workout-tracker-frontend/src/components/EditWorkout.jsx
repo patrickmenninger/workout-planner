@@ -23,11 +23,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
     );
     useEffect(() => {
         console.log("EFFECT: ", workout);
-    }, [workout])
-
-    function test() {
-        console.log(workout);
-    }
+    }, [workout]);
 
     function updateSet(type, exerciseIndex, index, value) {
 
@@ -80,18 +76,18 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
     }
 
-    function removeSet(exerciseIndex, isCardio) {
+    function removeSet(exerciseIndex, isCardio, index) {
 
         const updated = [...workout]; // shallow copy of the array
         const updatedExercise = { ...updated[exerciseIndex] }; // copy the exercise object
 
         if (isCardio) {
-            updatedExercise.info.time = updatedExercise.info.time?.slice(0, -1) || [];
-            updatedExercise.info.distance = updatedExercise.info.distance?.slice(0, -1) || [];
+            updatedExercise.info.time?.splice(index, 1) || [];
+            updatedExercise.info.distance?.splice(index, 1) || [];
         } else {
-            updatedExercise.info.weight = updatedExercise.info.weight?.slice(0, -1) || [];
-            updatedExercise.info.reps = updatedExercise.info.reps?.slice(0, -1) || [];
-            updatedExercise.info.rpe = updatedExercise.info.rpe?.slice(0, -1) || [];
+            updatedExercise.info.weight?.splice(index, 1) || [];
+            updatedExercise.info.reps?.splice(index, 1) || [];
+            updatedExercise.info.rpe?.splice(index, 1) || [];
         }
         updatedExercise.info.sets = Math.max((updatedExercise.info.sets || 0) - 1, 0);
         updated[exerciseIndex] = updatedExercise;
@@ -111,7 +107,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
         const newExercise = {
             model: {
                 name: exercises[0].name,
-                exercise_id: exercises[0].id,
+                id: exercises[0].id,
             },
             info: {
                 user_id: user.id,
@@ -122,7 +118,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
                 reps: [],
                 rpe: [],
                 rest_timer: 60,
-                order_index: workout.length,
+                order_index: workout.length + 1,
             }
         }
 
@@ -142,14 +138,33 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
     }
 
+    async function removeExercise(exerciseIndex) {
+
+        const updatedWorkout = [...workout];
+        updatedWorkout.splice(exerciseIndex, 1);
+        setWorkout(updatedWorkout);
+
+        if (mode === 'in-session') {
+            setExerciseSession(updatedWorkout);
+        } else {
+            setEditWorkout({
+                ...editWorkout,
+                exercises: updatedWorkout,
+            });
+        }
+
+    }
+
     return (
         <>
-        <Button onClick={test}>Test</Button>
             {
                 workout && workout.map((exercise, exerciseIndex) => {
                     return (
                         <div key={exerciseIndex}>
-                            <h5>{exercise.model.name}</h5>
+                            <div className='flex justify-content-between align-items-center'>
+                                <h5>{exercise.model.name}</h5>
+                                <FontAwesomeIcon icon={faXmark} onClick={() => removeExercise(exerciseIndex)}/>
+                            </div>
                             <p>{exercise.info.notes}</p>
                             <Button>Rest Timer: {exercise.info.rest_timer} Seconds</Button>
                             <Table>
@@ -175,7 +190,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
                                             <td><input type="number" onChange={(e) => updateSet("reps", exerciseIndex, index, e.target.value)} value={exercise.info.reps[index] || ""}/></td>
                                             <td><input type="number" onChange={(e) => updateSet("rpe", exerciseIndex, index, e.target.value)} value={exercise.info.rpe[index] || ""}/></td>
                                             {mode === "in-session" && (<td className='text-center'><input type="checkbox"></input></td>)}
-                                            <td><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false)}/></span></td>
+                                            <td><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></td>
                                         </tr>
                                     )
                                     }
@@ -187,7 +202,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
                                             <td><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""}/></td>
                                             <td><input type="number" onChange={(e) => updateSet("distance", exerciseIndex, index, e.target.value)} value={exercise.info.distance[index] || ""}/></td>
                                             {mode === "in-session" && (<td className='text-center'><input type="checkbox"></input></td>)}
-                                            <td><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false)}/></span></td>
+                                            <td><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></td>
                                         </tr>
                                     )
                                     }

@@ -58,7 +58,18 @@ export const WorkoutProvider = ({ children }) => {
         await addWorkoutExercises(formattedWorkoutExercises, id);
 
     },
-    onSuccess: queryClient.invalidateQueries(["workouts"])
+    onSuccess: () => {
+        queryClient.invalidateQueries(["workouts"]);
+    }
+  });
+
+  const updateWorkoutMutation = useMutation({
+    mutationFn: async ({workout, exercises, id}) => {
+        await updateWorkout({workout, exercises}, id);
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries(["workouts"]);
+    }
   });
 
   const startWorkout = (workout) => {
@@ -125,29 +136,39 @@ export const WorkoutProvider = ({ children }) => {
   function saveWorkout() {
     if (editMode === "pre-session") {
 
-        // const formattedWorkout = {
-        //     workout: {
-        //         name: editWorkout.name,
-        //         notes: editWorkout.notes
-        //     }
-        // }
+        const formattedWorkout = {
+            workout: {
+                name: editWorkout.name,
+                notes: editWorkout.notes
+            },
+            exercises: {
+                ...editWorkout.exercises
+            }
+        }
 
-        // // Call Route in update workout mutation, invalidate all queries
-        // const updateWorkoutMutation = useMutation({
-        //     mutationFn: async (updatedWorkout) => {
-        //         await updateWorkout(updatedWorkout, editWorkout.id)
-        //     },
-        //     onSuccess: () => {
-        //         queryClient.invalidateQueries(["workouts"]);
-        //     }
-        // });
+        formattedWorkout.exercises = editWorkout.exercises.map(exercise => {
+            return {
+                id: exercise.info.id,
+                workout_id: editWorkout.id,
+                exercise_id: exercise.model.id,
+                notes: exercise.info.notes,
+                order_index: exercise.info.order_index,
+                reps: exercise.info.reps,
+                rpe: exercise.info.rpe,
+                rest_timer: exercise.info.rest_timer,
+                distance: exercise.info.distance,
+                time: exercise.info.time,
+                weight: exercise.info.weight
+            }
+        })
+
+        console.log({formattedWorkout, id: editWorkout.id});
+        // Call Route in update workout mutation, invalidate all queries
+        updateWorkoutMutation.mutate({workout: formattedWorkout.workout, exercises: formattedWorkout.exercises, id: editWorkout.id});
 
     } else if (editMode === "create") {
 
         // Create workout
-
-        // Save id then create exercises
-
         console.log(editWorkout);
         const newWorkout = {
             user_id: editWorkout.exercises[0].info.user_id,
