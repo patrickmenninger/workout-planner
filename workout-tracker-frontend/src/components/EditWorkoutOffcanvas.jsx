@@ -1,11 +1,16 @@
-import { Offcanvas, Button } from 'react-bootstrap'
+import { Offcanvas, Button, Container } from 'react-bootstrap'
 import { useEditWorkout } from '../context/WorkoutContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import EditWorkout from './EditWorkout';
 import { useEffect, useState } from 'react';
+import ReorderModal from './ReorderModal';
 
 const EditWorkoutOffcanvas = () => {
+
+    function test() {
+        console.log(editWorkout);
+    }
 
     // For handling active workout off canvas
     const {
@@ -18,8 +23,10 @@ const EditWorkoutOffcanvas = () => {
         openOffcanvas,
         editMode,
         editWorkout,
+        exerciseSession,
         setEditWorkout,
-        setWorkoutSession
+        setWorkoutSession,
+        setExerciseSession
     } = useEditWorkout();
 
     const [title, setTitle] = useState(null);
@@ -43,12 +50,18 @@ const EditWorkoutOffcanvas = () => {
         {showResume && <Button onClick={openOffcanvas}>Resume</Button>}
         <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%"}}>
             <Offcanvas.Header className="flex justify-content-between">
-                <Offcanvas.Title><input type="text" onChange={(e) => updateTitle(e.target.value)} value={title || ""}/></Offcanvas.Title>
-                <FontAwesomeIcon icon={faChevronDown} onClick={closeOffcanvas}/>
+                <div className="flex align-items-center gap-2">
+                    <FontAwesomeIcon icon={faChevronDown} onClick={closeOffcanvas}/>
+                    <Offcanvas.Title><input type="text" onChange={(e) => updateTitle(e.target.value)} value={title || ""}/></Offcanvas.Title>
+                </div>
+                <div className='flex align-items-center gap-2'>
+                    <ReorderModal {...(editMode === "in-sesion" ? {data: exerciseSession, updateFn: setExerciseSession} : {data: editWorkout, updateFn: setEditWorkout})}/>
+                    {editMode !== 'in-session' && <Button onClick={saveWorkout} size="sm">Save</Button>}
+                    {editMode === "in-session" && (<Button onClick={endWorkout}>Finish Workout</Button>)}
+                </div>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                {editMode === "in-session" && (<Button onClick={endWorkout}>Finish Workout</Button>)}
-                {editMode !== 'in-session' && <Button onClick={saveWorkout}>Save Workout</Button>}
+                <Button onClick={test}>TEST</Button>
                 <EditWorkout mode={editMode} initialWorkout={editWorkout}/>
                 {editMode === "in-session" && (<Button onClick={stopWorkout}>Cancel Workout</Button>)}
                 {editMode !== "in-session" && (<Button onClick={stopWorkout}>Discard</Button>)}
