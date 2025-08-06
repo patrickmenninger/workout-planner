@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Modal, Button } from "react-bootstrap";
@@ -16,17 +16,48 @@ import {
     verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useEditWorkout } from "../context/WorkoutContext";
 
 const ReorderModal = ({data, updateFn}) => {
 
+    const {
+        editMode,
+        editWorkout,
+        exerciseSession,
+    } = useEditWorkout();
+
+    const sortedItems = useMemo(() => {
+        if (data?.exercises) {
+            const sorted = [...data.exercises]
+                .sort((a, b) => a.info.order_index - b.info.order_index)
+                .filter(item => item.info?.order_index != null);
+            
+            // Check for duplicate order_index values
+            const orderIndices = sorted.map(item => item.info.order_index);
+            const duplicates = orderIndices.filter((item, index) => orderIndices.indexOf(item) !== index);
+            if (duplicates.length > 0) {
+                console.warn('Duplicate order_index values found:', duplicates);
+                // Reindex to fix duplicates
+                return sorted.map((item, i) => ({
+                    ...item,
+                    info: { ...item.info, order_index: i + 1 }
+                }));
+            }
+            return sorted;
+        }
+        return [];
+    }, [data]);
+
+    // const [items, setItems] = useState(
+    //     editMode === 'in-session' ? exerciseSession : editWorkout?.exercises || []
+    // );
+
     const [show, setShow] = useState(false);
-    const [items, setItems] = useState(
-        data?.exercises?.sort((a, b) => a.info.order_index - b.info.order_index) || []
-    );
+    const [items, setItems] = useState(sortedItems);
 
     useEffect(() => {
-        setItems(data?.exercises?.sort((a, b) => a.info.order_index - b.info.order_index) || []);
-    }, [data]);
+        setItems(sortedItems);
+    }, [sortedItems]);
 
     const sensors = useSensors(useSensor(PointerSensor));
 
@@ -35,8 +66,8 @@ const ReorderModal = ({data, updateFn}) => {
 
         if (!over || active.id === over.id) return;
 
-        const oldIndex = items.findIndex((item) => item.info.id === active.id);
-        const newIndex = items.findIndex((item) => item.info.id === over.id);
+        const oldIndex = items.findIndex((item) => item.info.order_index === active.id);
+        const newIndex = items.findIndex((item) => item.info.order_index === over.id);
 
         const newItems = arrayMove(items, oldIndex, newIndex).map((item, i) => ({
             ...item,
@@ -50,7 +81,7 @@ const ReorderModal = ({data, updateFn}) => {
     };
 
     const handleClose = () => {
-        setItems(data?.exercises?.sort((a, b) => a.info.order_index - b.info.order_index));
+        setItems(sortedItems);
         setShow(false);
     }
     const handleShow = () => setShow(true);
@@ -76,11 +107,11 @@ const ReorderModal = ({data, updateFn}) => {
                 onDragEnd={handleDragEnd}
                 >
                     <SortableContext
-                        items={items.map((item) => item.info.id)}
+                        items={items.map((item) => item.info.order_index)}
                         strategy={verticalListSortingStrategy}
                     >
                         {items.map((item) => (
-                        <SortableItem key={item.info.id} item={item} />
+                        <SortableItem key={item.info.order_index} item={item} />
                         ))}
                     </SortableContext>
                 </DndContext>
@@ -105,7 +136,7 @@ const SortableItem = ({ item }) => {
         setNodeRef,
         transform,
         transition
-    } = useSortable({ id: item.info.id });
+    } = useSortable({ id: item.info.order_index });
 
     const style = {
         transform: CSS.Transform.toString(transform),

@@ -144,14 +144,24 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
         const updatedWorkout = [...workout];
         updatedWorkout.splice(exerciseIndex, 1);
-        setWorkout(updatedWorkout);
+
+        // Reassign order_index to keep them sequential
+        const reindexedWorkout = updatedWorkout.map((exercise, i) => ({
+            ...exercise,
+            info: {
+                ...exercise.info,
+                order_index: i + 1
+            }
+        }));
+
+        setWorkout(reindexedWorkout);
 
         if (mode === 'in-session') {
-            setExerciseSession(updatedWorkout);
+            setExerciseSession(reindexedWorkout);
         } else {
             setEditWorkout({
                 ...editWorkout,
-                exercises: updatedWorkout,
+                exercises: reindexedWorkout,
             });
         }
 
