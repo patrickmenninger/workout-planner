@@ -22,9 +22,11 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
     const [workout, setWorkout] = useState(
         mode === 'in-session' ? exerciseSession : editWorkout?.exercises || initialWorkout?.exercises || []
     );
+    
     useEffect(() => {
-        console.log("EFFECT: ", workout);
-    }, [workout]);
+        const source = mode === 'in-session' ? exerciseSession : editWorkout?.exercises || initialWorkout?.exercises || [];
+        setWorkout(source);
+    }, [exerciseSession, editWorkout, initialWorkout, mode]);
 
     function updateSet(type, exerciseIndex, index, value) {
 
