@@ -49,7 +49,10 @@ const ReorderModal = ({data, updateFn}) => {
         setItems(newItems);
     };
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setItems(data?.exercises?.sort((a, b) => a.info.order_index - b.info.order_index));
+        setShow(false);
+    }
     const handleShow = () => setShow(true);
     const handleSave = () => {
         updateFn((prev) => ({
