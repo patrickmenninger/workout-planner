@@ -101,7 +101,7 @@ router.post("/history", TokenMiddleware, async (req, res) => {
             start_date: req.body.start_date, 
             end_date: req.body.end_date, 
             notes: req.body.notes, 
-            workout_name: req.body.workout_name
+            name: req.body.name
         })
         .select()
 

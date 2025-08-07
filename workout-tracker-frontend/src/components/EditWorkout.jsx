@@ -7,7 +7,7 @@ import { getExercises } from '../services/ExerciseService.mjs';
 import { useAuth } from '../context/AuthProvider';
 import AddExercise from './AddExercise';
 
-const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
+const EditWorkout = ({mode = 'in-session'}) => {
 
     const {user} = useAuth();
 
@@ -17,21 +17,21 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
         editWorkout,
         setEditWorkout,
     } = useEditWorkout();
-    
-    
-    const [workout, setWorkout] = useState(
-        mode === 'in-session' ? exerciseSession : editWorkout?.exercises || initialWorkout?.exercises || []
+
+    const [exercises, setExercises] = useState(
+        mode === 'in-session' ? exerciseSession : editWorkout.exercises || []
     );
     
     useEffect(() => {
-        const source = mode === 'in-session' ? exerciseSession : editWorkout?.exercises || initialWorkout?.exercises || [];
-        setWorkout(source);
-    }, [exerciseSession, editWorkout, initialWorkout, mode]);
+        const source = mode === 'in-session' ? exerciseSession : editWorkout.exercises || [];
+        setExercises(source);
+
+    }, [exerciseSession, editWorkout, mode]);
 
     function updateSet(type, exerciseIndex, index, value) {
 
-        console.log(workout);
-        const updated = [...workout]; // shallow copy of the array
+        console.log(exercises);
+        const updated = [...exercises]; // shallow copy of the array
         const updatedExerciseInfo = { ...updated[exerciseIndex].info }; // copy the exercise object
         console.log(updatedExerciseInfo);
 
@@ -45,7 +45,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
         if (mode === 'in-session') {
             setExerciseSession(updated);
         } else {
-            setWorkout(updated);
+            setExercises(updated);
         }
 
         console.log(updated);
@@ -54,7 +54,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
     function addSet(exerciseIndex, isCardio) {
 
-        const updated = [...workout]; // shallow copy of the array
+        const updated = [...exercises]; // shallow copy of the array
         const updatedExercise = { ...updated[exerciseIndex] }; // copy the exercise object
 
         if (isCardio) {
@@ -72,7 +72,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
         if (mode === 'in-session') {
             setExerciseSession(updated);
         } else {
-            setWorkout(updated);
+            setExercises(updated);
         }
 
         console.log(updated);
@@ -81,7 +81,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
     function removeSet(exerciseIndex, isCardio, index) {
 
-        const updated = [...workout]; // shallow copy of the array
+        const updated = [...exercises]; // shallow copy of the array
         const updatedExercise = { ...updated[exerciseIndex] }; // copy the exercise object
 
         if (isCardio) {
@@ -98,43 +98,94 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
         if (mode === 'in-session') {
             setExerciseSession(updated);
         } else {
-            setWorkout(updated);
+            setEditWorkout((prev) => {
+                return {
+                    ...prev,
+                    exercises: updated
+                }
+            });
         }
 
     }
 
-    async function addExercises(exercises) {
+    async function updateExercise(exerciseIndex, newNotes) {
+        
+        const updated = [...exercises]; // shallow copy of the array
+        const updatedExercise = { ...updated[exerciseIndex] }; // copy the exercise object
 
-        let orderIdx = workout.length;
-        const newExercises = exercises.map(exercise => {
-            return {
-                model: {
-                    name: exercise.name,
-                    id: exercise.id,
-                },
-                info: {
-                    user_id: user.id,
-                    notes: "",
-                    time: null,
-                    distance: null,
-                    weight: [],
-                    reps: [],
-                    rpe: [],
-                    rest_timer: 60,
-                    order_index: ++orderIdx,
+        updatedExercise.info.notes = newNotes;
+        updated[exerciseIndex] = updatedExercise;
+
+        if (mode === 'in-session') {
+            setExerciseSession(updated);
+        } else {
+            setEditWorkout((prev) => {
+                return {
+                    ...prev,
+                    exercises: updated
+                }
+            });
+        }
+
+    }
+
+    async function addExercises(newExercises) {
+
+        let orderIdx = exercises.length;
+        const newFormattedExercises = newExercises.map(exercise => {
+
+            if (exercise.muscle_groups.includes("Cardio")) {
+                return {
+                    model: {
+                        name: exercise.name,
+                        id: exercise.id,
+                    },
+                    info: {
+                        user_id: user.id,
+                        notes: "",
+                        time: [null],
+                        distance: [null],
+                        weight: null,
+                        reps: null,
+                        rpe: null,
+                        rest_timer: 60,
+                        order_index: ++orderIdx,
+                    }
+                }
+            } else {
+                return {
+                    model: {
+                        name: exercise.name,
+                        id: exercise.id,
+                    },
+                    info: {
+                        user_id: user.id,
+                        notes: "",
+                        time: null,
+                        distance: null,
+                        weight: [null],
+                        reps: [null],
+                        rpe: [null],
+                        rest_timer: 60,
+                        order_index: ++orderIdx,
+                    }
                 }
             }
+
+            
         });
 
-        const updatedWorkout = [...workout, ...newExercises];
-        setWorkout(updatedWorkout);
+        const updatedWorkout = [...exercises, ...newFormattedExercises];
+        setExercises(updatedWorkout);
 
         if (mode === 'in-session') {
             setExerciseSession(updatedWorkout);
         } else {
-            setEditWorkout({
-                ...editWorkout,
-                exercises: updatedWorkout,
+            setEditWorkout((prev) => {
+                return {
+                    ...prev,
+                    exercises: updatedWorkout,
+                }
             });
         }
 
@@ -142,7 +193,7 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
 
     async function removeExercise(exerciseIndex) {
 
-        const updatedWorkout = [...workout];
+        const updatedWorkout = [...exercises];
         updatedWorkout.splice(exerciseIndex, 1);
 
         // Reassign order_index to keep them sequential
@@ -154,14 +205,16 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
             }
         }));
 
-        setWorkout(reindexedWorkout);
+        setExercises(reindexedWorkout);
 
         if (mode === 'in-session') {
             setExerciseSession(reindexedWorkout);
         } else {
-            setEditWorkout({
-                ...editWorkout,
-                exercises: reindexedWorkout,
+            setEditWorkout((prev) => {
+                return {
+                    ...prev,
+                    exercises: reindexedWorkout,
+                }
             });
         }
 
@@ -170,14 +223,14 @@ const EditWorkout = ({mode = 'in-session', initialWorkout = null}) => {
     return (
         <>
             {
-                workout && workout.map((exercise, exerciseIndex) => {
+                exercises && exercises.map((exercise, exerciseIndex) => {
                     return (
                         <div key={exerciseIndex}>
                             <div className='flex justify-content-between align-items-center'>
                                 <h5>{exercise.model.name}</h5>
                                 <FontAwesomeIcon icon={faXmark} onClick={() => removeExercise(exerciseIndex)}/>
                             </div>
-                            <p>{exercise.info.notes}</p>
+                            <textarea value={exercise.info.notes || ""} onChange={(e) => updateExercise(exerciseIndex, e.target.value)} placeholder='Exercise notes'/>
                             <Button>Rest Timer: {exercise.info.rest_timer} Seconds</Button>
                             <Table>
                                 <thead>

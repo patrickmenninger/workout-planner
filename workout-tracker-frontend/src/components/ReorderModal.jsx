@@ -18,17 +18,11 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useEditWorkout } from "../context/WorkoutContext";
 
-const ReorderModal = ({data, updateFn}) => {
-
-    const {
-        editMode,
-        editWorkout,
-        exerciseSession,
-    } = useEditWorkout();
+const ReorderModal = ({mode, data, updateFn}) => {
 
     const sortedItems = useMemo(() => {
-        if (data?.exercises) {
-            const sorted = [...data.exercises]
+        if (data) {
+            const sorted = [...data]
                 .sort((a, b) => a.info.order_index - b.info.order_index)
                 .filter(item => item.info?.order_index != null);
             
@@ -47,10 +41,6 @@ const ReorderModal = ({data, updateFn}) => {
         }
         return [];
     }, [data]);
-
-    // const [items, setItems] = useState(
-    //     editMode === 'in-session' ? exerciseSession : editWorkout?.exercises || []
-    // );
 
     const [show, setShow] = useState(false);
     const [items, setItems] = useState(sortedItems);
@@ -86,10 +76,16 @@ const ReorderModal = ({data, updateFn}) => {
     }
     const handleShow = () => setShow(true);
     const handleSave = () => {
-        updateFn((prev) => ({
-            ...prev,
-            exercises: items
-        }));
+
+        if (mode === "in-session") {
+            updateFn(items)
+        } else {
+            updateFn((prev) => ({
+                ...prev,
+                exercises: items
+            }));
+        }
+
         handleClose();
     }
 

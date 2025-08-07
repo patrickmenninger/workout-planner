@@ -80,7 +80,8 @@ export const WorkoutProvider = ({ children }) => {
 
     const currWorkoutSession = {
         user_id: workoutCopy.user_id,
-        workout_name: workoutCopy.name,
+        name: workoutCopy.name,
+        notes: workoutCopy.notes,
         start_date: (new Date()).toISOString()
     }
     setWorkoutSession(currWorkoutSession);
@@ -90,7 +91,7 @@ export const WorkoutProvider = ({ children }) => {
         return {
             model: {
                 name: exercise.model.name,
-                exercise_id: exercise.model.id,
+                id: exercise.model.id,
             },
             info: {
                 user_workout_id: "",
@@ -115,8 +116,11 @@ export const WorkoutProvider = ({ children }) => {
   };
 
   const openForEdit = (mode, workout) => {
+    const workoutCopy = JSON.parse(JSON.stringify(workout));
+    setWorkoutData(workoutCopy);
+
     setEditMode(mode);
-    setEditWorkout(workout);
+    setEditWorkout(workoutCopy);
     setIsOpen(true);
   }
 
@@ -133,13 +137,13 @@ export const WorkoutProvider = ({ children }) => {
   }
 
       
-  function saveWorkout() {
+  function saveWorkout(name, notes) {
     if (editMode === "pre-session") {
 
         const formattedWorkout = {
             workout: {
-                name: editWorkout.name,
-                notes: editWorkout.notes
+                name: name,
+                notes: notes
             },
             exercises: {
                 ...editWorkout.exercises
@@ -181,17 +185,20 @@ export const WorkoutProvider = ({ children }) => {
 
   };
 
-  const endWorkout = async () => {
+  const endWorkout = async (name, notes) => {
 
     // Save to the db
-    console.log(workoutSession);
     workoutSession.end_date = (new Date()).toISOString();
+    workoutSession.name = name;
+    workoutSession.notes = notes;
     const workoutHistoryId = await workoutHistoryMutation.mutateAsync(workoutSession);
 
     const formattedExerciseSession = exerciseSession.map(exercise => {
 
+        console.log("FINISHED WOKROUT EXERCISE", exercise)
+
         const formattedExercise = {
-            exercise_id: exercise.model.exercise_id,
+            exercise_id: exercise.model.id,
             user_workout_id: workoutHistoryId,
             user_id: exercise.info.user_id,
             notes: exercise.info.notes,
@@ -216,6 +223,7 @@ export const WorkoutProvider = ({ children }) => {
       value={{
         workoutData,
         exerciseSession,
+        workoutSession,
         isOpen,
         editMode,
         editWorkout,
