@@ -1,9 +1,9 @@
 ---
-name: Enhancement
+name: Enhancement request
 about: Describe this enhancement here.
 title: ''
 labels: enhancement
-assignees: patrickmenninger
+assignees: ''
 
 ---
 
