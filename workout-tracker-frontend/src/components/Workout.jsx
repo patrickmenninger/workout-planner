@@ -1,13 +1,49 @@
-import { Card, Button } from "react-bootstrap"
+import { Card, Button, Dropdown } from "react-bootstrap"
 import { useEditWorkout } from "../context/WorkoutContext"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { deleteWorkout } from "../services/WorkoutService.mjs";
 
 const Workout = ({workout}) => {
 
-    const {startWorkout} = useEditWorkout();
+    const queryClient = useQueryClient();
+
+    const handleEditWorkout = (workout) => {
+        openForEdit('pre-session', workout);
+    };
+
+    const deleteWorkoutMutation = useMutation({
+        mutationFn: async (id) => {
+            await deleteWorkout(id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['workouts']);
+        }
+    })
+    const handleDeleteWorkout = () => {
+        deleteWorkoutMutation.mutate(workout.id);
+    }
+
+    const {startWorkout, openForEdit} = useEditWorkout();
 
     return (
+        <>
         <Card key={workout.id} className="my-3 py-3 px-2">
-            <h5>{workout.name}</h5>
+            <div className="flex justify-content-between align-items-center">
+                <h5>{workout.name}</h5>
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        <FontAwesomeIcon icon={faBars}/>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item><Button onClick={() => handleEditWorkout(workout)}>Edit</Button></Dropdown.Item>
+                        <Dropdown.Item><Button className="btn-danger" onClick={() => handleDeleteWorkout()}>Delete</Button></Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
                 <Card className="px-3">
                     <div className="flex justify-content-between">
                         <span>Exercises</span>
@@ -33,6 +69,7 @@ const Workout = ({workout}) => {
                 <Button onClick={() => startWorkout(workout)}>Start Workout</Button>
                 </Card>
         </Card>
+        </>
     )
 }
 

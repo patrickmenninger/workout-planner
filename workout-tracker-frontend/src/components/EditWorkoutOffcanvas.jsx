@@ -23,6 +23,7 @@ const EditWorkoutOffcanvas = () => {
         openOffcanvas,
         editMode,
         editWorkout,
+        workoutSession,
         exerciseSession,
         setEditWorkout,
         setWorkoutSession,
@@ -30,39 +31,45 @@ const EditWorkoutOffcanvas = () => {
     } = useEditWorkout();
 
     const [title, setTitle] = useState(null);
-    const showResume = workoutData || editWorkout;
+    const [notes, setNotes] = useState(null);
+    const showResume = workoutData;
 
     useEffect(() => {
-        setTitle(editMode === 'in-session' ? workoutData?.name : editWorkout?.name || 'New Workout');
-    }, [workoutData, editWorkout])
+        setTitle(editMode === 'in-session' ? workoutSession?.name : workoutData?.name || 'New Workout');
+        setNotes(editMode === 'in-session' ? workoutSession?.notes : workoutData?.notes || "");
+    }, [workoutData]);
 
     function updateTitle(newTitle) {
         setTitle(newTitle);
-        if (editMode === "in-session") {
-            setWorkoutSession((prev) => ({...prev, workout_name: newTitle}));
-        } else {
-            setEditWorkout((prev) => ({...prev, name: newTitle}));
-        }
+    }
+
+    function updateNotes(newNotes) {
+        setNotes(newNotes);
     }
 
     return (
         <>
         {showResume && <Button onClick={openOffcanvas}>Resume</Button>}
         <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%"}}>
-            <Offcanvas.Header className="flex justify-content-between">
-                <div className="flex align-items-center gap-2">
-                    <FontAwesomeIcon icon={faChevronDown} onClick={closeOffcanvas}/>
-                    <Offcanvas.Title><input type="text" onChange={(e) => updateTitle(e.target.value)} value={title || ""}/></Offcanvas.Title>
+            <Offcanvas.Header className="flex flex-col gap-4">
+                <div className="flex justify-content-between w-100">
+                    <div className="flex align-items-center gap-2">
+                        <FontAwesomeIcon icon={faChevronDown} onClick={closeOffcanvas}/>
+                        <Offcanvas.Title><input type="text" onChange={(e) => updateTitle(e.target.value)} value={title || ""}/></Offcanvas.Title>
+                    </div>
+                    <div className='flex align-items-center gap-2'>
+                        <ReorderModal {...(editMode === "in-session" ? {mode: "in-session", data: exerciseSession, updateFn: setExerciseSession} : {mode: "not-in-session", data: editWorkout.exercises, updateFn: setEditWorkout})}/>
+                        {editMode !== 'in-session' && <Button onClick={() => saveWorkout(title, notes)} size="sm">Save</Button>}
+                        {editMode === "in-session" && (<Button onClick={() => endWorkout(title, notes)}>Finish</Button>)}
+                    </div>
                 </div>
-                <div className='flex align-items-center gap-2'>
-                    <ReorderModal {...(editMode === "in-sesion" ? {data: exerciseSession, updateFn: setExerciseSession} : {data: editWorkout, updateFn: setEditWorkout})}/>
-                    {editMode !== 'in-session' && <Button onClick={saveWorkout} size="sm">Save</Button>}
-                    {editMode === "in-session" && (<Button onClick={endWorkout}>Finish Workout</Button>)}
+                <div className="w-100">
+                    <textarea value={notes || ""} onChange={(e) => updateNotes(e.target.value)} className="justify-self-start w-100" placeholder="Workout notes"/>
                 </div>
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Button onClick={test}>TEST</Button>
-                <EditWorkout mode={editMode} initialWorkout={editWorkout}/>
+                <EditWorkout mode={editMode} initialWorkout={workoutData}/>
                 {editMode === "in-session" && (<Button onClick={stopWorkout}>Cancel Workout</Button>)}
                 {editMode !== "in-session" && (<Button onClick={stopWorkout}>Discard</Button>)}
             </Offcanvas.Body>

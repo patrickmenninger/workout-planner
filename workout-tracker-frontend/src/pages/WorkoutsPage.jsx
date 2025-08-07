@@ -1,5 +1,5 @@
-import { Card, Tab, Tabs, Button } from "react-bootstrap";
-
+import { Card, Tab, Tabs, Button, Modal } from "react-bootstrap";
+import { useState } from "react";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlans } from "../hooks/usePlansData.mjs";
 import Workout from "../components/Workout";
@@ -11,11 +11,6 @@ const WorkoutsPage = () => {
     const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
     const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
     const {openForEdit} = useEditWorkout();
-
-    const handleEditWorkout = (workout) => {
-        console.log("EDITING");
-        openForEdit('pre-session', workout);
-    };
 
     const handleCreateWorkout = () => {
         console.log("CREATING");
@@ -42,7 +37,6 @@ const WorkoutsPage = () => {
                     workouts && workouts.map(workout => 
                         <div  key={workout.id}>
                             <Workout workout={workout}/>
-                            <Button onClick={() => handleEditWorkout(workout)}>Edit</Button>
                         </div>
                     )
                 }

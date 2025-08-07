@@ -101,7 +101,7 @@ router.post("/history", TokenMiddleware, async (req, res) => {
             start_date: req.body.start_date, 
             end_date: req.body.end_date, 
             notes: req.body.notes, 
-            workout_name: req.body.workout_name
+            name: req.body.name
         })
         .select()
 
@@ -169,5 +169,16 @@ router.put("/:id", TokenMiddleware, async (req, res) => {
     res.sendStatus(200);
     
 });
+
+router.delete("/:id", TokenMiddleware, async (req, res) => {
+    const {error} = await supabase
+        .from("workouts")
+        .delete()
+        .eq("id", req.params.id)
+
+    if (error) return res.status(500).json({error: error.message});
+
+    res.sendStatus(200);
+})
 
 export default router;

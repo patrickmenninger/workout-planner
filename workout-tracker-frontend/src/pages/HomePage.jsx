@@ -13,7 +13,7 @@ const HomePage = () => {
         {
         workoutHistory && workoutHistory.map(workout =>
             <Card key={workout.id}>
-                <h3>{workout.workout_name}</h3>
+                <h3>{workout.name}</h3>
                 {
                 exerciseHistory && exerciseHistory
                     .filter(exercise => workout.id === exercise.user_workout_id)
