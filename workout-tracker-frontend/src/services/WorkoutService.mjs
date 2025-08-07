@@ -23,3 +23,7 @@ export const createWorkout = (newWorkout) => {
 export const addWorkoutExercises = (workoutExercises, id) => {
     return axiosClient.post(`/workouts/${id}/exercises`, workoutExercises)
 }
+
+export const deleteWorkout = (id) => {
+    return axiosClient.delete(`/workouts/${id}`)
+}

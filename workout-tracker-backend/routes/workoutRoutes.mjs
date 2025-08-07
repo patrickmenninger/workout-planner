@@ -170,4 +170,15 @@ router.put("/:id", TokenMiddleware, async (req, res) => {
     
 });
 
+router.delete("/:id", TokenMiddleware, async (req, res) => {
+    const {error} = await supabase
+        .from("workouts")
+        .delete()
+        .eq("id", req.params.id)
+
+    if (error) return res.status(500).json({error: error.message});
+
+    res.sendStatus(200);
+})
+
 export default router;

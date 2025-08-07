@@ -55,9 +55,9 @@ const EditWorkoutOffcanvas = () => {
                     <Offcanvas.Title><input type="text" onChange={(e) => updateTitle(e.target.value)} value={title || ""}/></Offcanvas.Title>
                 </div>
                 <div className='flex align-items-center gap-2'>
-                    <ReorderModal {...(editMode === "in-sesion" ? {data: exerciseSession, updateFn: setExerciseSession} : {data: editWorkout, updateFn: setEditWorkout})}/>
+                    <ReorderModal {...(editMode === "in-session" ? {data: exerciseSession, updateFn: setExerciseSession} : {data: editWorkout, updateFn: setEditWorkout})}/>
                     {editMode !== 'in-session' && <Button onClick={saveWorkout} size="sm">Save</Button>}
-                    {editMode === "in-session" && (<Button onClick={endWorkout}>Finish Workout</Button>)}
+                    {editMode === "in-session" && (<Button onClick={endWorkout}>Finish</Button>)}
                 </div>
             </Offcanvas.Header>
             <Offcanvas.Body>
