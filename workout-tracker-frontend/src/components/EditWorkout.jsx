@@ -3,7 +3,6 @@ import { useEditWorkout } from '../context/WorkoutContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import { getExercises } from '../services/ExerciseService.mjs';
 import { useAuth } from '../context/AuthProvider';
 import AddExercise from './AddExercise';
 
@@ -232,47 +231,43 @@ const EditWorkout = ({mode = 'in-session'}) => {
                             </div>
                             <textarea value={exercise.info.notes || ""} onChange={(e) => updateExercise(exerciseIndex, e.target.value)} placeholder='Exercise notes'/>
                             <Button>Rest Timer: {exercise.info.rest_timer} Seconds</Button>
-                            <Table>
-                                <thead>
-                                    <tr>
-                                        <th>SET</th>
-                                        <th>PREVIOUS</th>
-                                        {exercise.info.reps && <th>LBS</th>}
-                                        {exercise.info.reps && <th>REPS</th>}
-                                        {exercise.info.rpe && <th>RPE</th>}
-                                        {exercise.info.time && <th>TIME</th>}
-                                        {exercise.info.distance && <th>DISTANCE</th>}
-                                        {mode === 'in-session' && (<th>FINISH</th>)}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                    exercise.info.reps && exercise.info.reps.map((currSet, index) => 
-                                        <tr key={index} style={{"overflow": "hidden"}} className="active-workout">
-                                            <td>{index + 1}</td>
-                                            <td>prev</td>
-                                            <td><input type="number" onChange={(e) => updateSet("weight", exerciseIndex, index, e.target.value)} value={exercise.info.weight[index] || ""}/></td>
-                                            <td><input type="number" onChange={(e) => updateSet("reps", exerciseIndex, index, e.target.value)} value={exercise.info.reps[index] || ""}/></td>
-                                            <td><input type="number" onChange={(e) => updateSet("rpe", exerciseIndex, index, e.target.value)} value={exercise.info.rpe[index] || ""}/></td>
-                                            {mode === "in-session" && (<td className='text-center'><input type="checkbox"></input></td>)}
-                                            <td><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></td>
-                                        </tr>
-                                    )
-                                    }
-                                    {
-                                    exercise.info.time && exercise.info.time.map((currSet, index) =>
-                                        <tr key={index} style={{"overflow": "hidden"}} className="active-workout">
-                                            <td>{index + 1}</td>
-                                            <td>prev</td>
-                                            <td><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""}/></td>
-                                            <td><input type="number" onChange={(e) => updateSet("distance", exerciseIndex, index, e.target.value)} value={exercise.info.distance[index] || ""}/></td>
-                                            {mode === "in-session" && (<td className='text-center'><input type="checkbox"></input></td>)}
-                                            <td><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></td>
-                                        </tr>
-                                    )
-                                    }
-                                </tbody>
-                            </Table>
+                            <div className="table-container mx-auto">
+                                <div className="table-row">
+                                    <div className="table-cell">SET</div>
+                                    <div className="table-cell">PREVIOUS</div>
+                                    {exercise.info.reps && <div className="table-cell">LBS</div>}
+                                    {exercise.info.reps && <div className="table-cell">REPS</div>}
+                                    {exercise.info.rpe && <div className="table-cell">RPE</div>}
+                                    {exercise.info.time && <div className="table-cell">TIME</div>}
+                                    {exercise.info.distance && <div className="table-cell">DISTANCE</div>}
+                                    {mode === 'in-session' && (<div className="table-cell">FINISH</div>)}
+                                </div>
+                                {
+                                exercise.info.reps && exercise.info.reps.map((currSet, index) => 
+                                    <div key={index} style={{"overflow": "hidden"}} className="table-row">
+                                        <div className="table-cell">{index + 1}</div>
+                                        <div className="table-cell">prev</div>
+                                        <div className="table-cell"><input type="number" onChange={(e) => updateSet("weight", exerciseIndex, index, e.target.value)} value={exercise.info.weight[index] || ""}/></div>
+                                        <div className="table-cell"><input type="number" onChange={(e) => updateSet("reps", exerciseIndex, index, e.target.value)} value={exercise.info.reps[index] || ""}/></div>
+                                        <div className="table-cell"><input type="number" onChange={(e) => updateSet("rpe", exerciseIndex, index, e.target.value)} value={exercise.info.rpe[index] || ""}/></div>
+                                        {mode === "in-session" && (<div className='text-center table-cell'><input type="checkbox"></input></div>)}
+                                        <div className="table-cell"><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></div>
+                                    </div>
+                                )
+                                }
+                                {
+                                exercise.info.time && exercise.info.time.map((currSet, index) =>
+                                    <div key={index} style={{"overflow": "hidden"}} className="table-row">
+                                        <div className="table-cell">{index + 1}</div>
+                                        <div className="table-cell">prev</div>
+                                        <div className="table-cell"><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""}/></div>
+                                        <div className="table-cell"><input type="number" onChange={(e) => updateSet("distance", exerciseIndex, index, e.target.value)} value={exercise.info.distance[index] || ""}/></div>
+                                        {mode === "in-session" && (<div className='text-center table-cell'><input type="checkbox"></input></div>)}
+                                        <div className="table-cell"><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></div>
+                                    </div>
+                                )
+                                }
+                            </div>
                             <Container className="justify-content-center flex"><Button size="sm" className="w-100" onClick={() => addSet(exerciseIndex, exercise.info.time ? true : false)}>+ Add Set</Button></Container>
                         </div>
                     )

@@ -81,7 +81,7 @@ button:focus-visible {
   }
 }
 
-.active-workout td {
+/* .active-workout td {
     text-align: center;
 }
 
@@ -101,4 +101,27 @@ button:focus-visible {
     width: 100%;
     padding-left: 0;
     padding-right: 0;
+} */
+
+.table-container {
+    display: table;
+    width: 90%;
+}
+
+.table-row{
+    display: table-row;
+    width: 100%;
+}
+
+.table-cell {
+    display: table-cell;
+    padding: 1px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+    text-align: end;
+}
+
+.table-cell input[type="number"] {
+    width: 50%;
+    vertical-align: middle;
 }
