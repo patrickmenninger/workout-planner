@@ -10,7 +10,7 @@ const WorkoutsPage = () => {
 
     const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
     const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
-    const {openForEdit} = useEditWorkout();
+    const {openForEdit, startWorkout} = useEditWorkout();
 
     const handleCreateWorkout = () => {
         console.log("CREATING");
@@ -33,6 +33,7 @@ const WorkoutsPage = () => {
                 }
             </Tab>
             <Tab eventKey="workouts" title="Workouts">
+                <Button onClick={() => startWorkout({name: "New Workout", exercises: []})}>Quick Start Workout</Button>
                 {
                     workouts && workouts.map(workout => 
                         <div  key={workout.id}>
