@@ -68,7 +68,6 @@ const EditWorkoutOffcanvas = () => {
                 </div>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                <Button onClick={test}>TEST</Button>
                 <EditWorkout mode={editMode} initialWorkout={workoutData}/>
                 {editMode === "in-session" && (<Button onClick={stopWorkout}>Cancel Workout</Button>)}
                 {editMode !== "in-session" && (<Button onClick={stopWorkout}>Discard</Button>)}
