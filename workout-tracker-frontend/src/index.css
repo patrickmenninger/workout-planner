@@ -1,12 +1,23 @@
 @import "tailwindcss";
 
+@theme {
+    --color-main-900: oklch(0.2314 0.0781 266.47);
+    --color-side-900: oklch(0.2404 0.0288 269.65);
+    --color-accent-900: oklch(0.3608 0.014 270.71);
+    --color-text: oklch(0.959 0.014 101.29);
+    --color-danger-900: oklch(0.2667 0.1077 27.18);
+    --color-danger-500: oklch(0.2167 0.0781 27.18);
+    --color-go-900: oklch(0.3814 0.1151 141.53);
+    --color-go-500: oklch(0.3196 0.0954 141.53);
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: #FFFFFF;
   background-color: #242424;
 
   font-synthesis: none;
@@ -15,10 +26,68 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+    color: var(--color-text) !important
+}
+
+/* #region dropdown */
+div .dropdown-item {
+    color: var(--color-text)
+}
+div .dropdown-menu.show {
+    background-color: var(--color-accent-900);
+    display: flex;
+    @apply py-1;
+}
+
+div .dropdown-menu.show a {
+    @apply px-1 py-1;
+    font-size: small;
+    display: flex;
+    justify-content: center;
+}
+div.dropdown-menu.show button {
+    font-size: small;
+    width: 75%;
+    @apply mx-0 px-0
+}
+
+.dropend .btn-primary,
+.dropend .btn-primary:hover,
+.dropend .btn.show,
+.dropend .btn-active,
+.dropend .btn:first-child:active {
+    background-color: transparent;
+    border: none;
+    padding-right: 0;
+}
+
+div .dropend .dropdown-toggle::after {
+    display: none
+}
+
+div .dropdown-menu.show a:hover {
+    background-color: transparent;
+    color: var(--color-text)
+}
+/* #endregion */
+
+/* #region navlink */
+.nav-link-custom {
+    @apply text-text no-underline
+}
+
+.nav-link-custom:hover {
+    color: #535bf2;
+}
+/* #endregion *//* #region button */
+
+
+
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: oklch(0.7578 0.014 101.29);
+  text-decoration: none;
 }
 a:hover {
   color: #535bf2;
@@ -81,6 +150,7 @@ button:focus-visible {
   }
 }
 
+/* #region table */
 .table-container {
     display: table;
     width: 90%;
@@ -105,3 +175,4 @@ button:focus-visible {
     background-color: lightgray;
     text-align: center;
 }
+/* #endregion */

@@ -1,4 +1,4 @@
-import { Button, Table, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { useEditWorkout } from '../context/WorkoutContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import AddExercise from './AddExercise';
 import { NavLink } from 'react-router-dom';
+import { Button } from './Tags';
 
 const EditWorkout = ({mode = 'in-session'}) => {
 
@@ -52,8 +53,6 @@ const EditWorkout = ({mode = 'in-session'}) => {
         } else {
             setExercises(updated);
         }
-
-        console.log(updated);
 
     }
 
@@ -255,7 +254,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
     }
 
     return (
-        <>
+        <div style={{color: "var(--color-text"}}>
             <Button onClick={test}>TEST</Button>
             {
                 exercises && exercises.map((exercise, exerciseIndex) => {
@@ -280,7 +279,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                 </div>
                                 {
                                 exercise.info.reps && exercise.info.reps.map((currSet, index) => 
-                                    <div key={index} style={{"overflow": "hidden"}} className={"table-row " + (finishedSets[exerciseIndex]?.[index] ? 'bg-green-400' : '')}>
+                                    <div key={index} style={{"overflow": "hidden"}} className={"table-row " + (finishedSets[exerciseIndex]?.[index] ? 'bg-go-900' : '')}>
                                         <div className="table-cell">{index + 1}</div>
                                         <div className="table-cell">prev</div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("weight", exerciseIndex, index, e.target.value)} value={exercise.info.weight[index] || ""}/></div>
@@ -299,7 +298,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                 }
                                 {
                                 exercise.info.time && exercise.info.time.map((currSet, index) =>
-                                    <div key={index} style={{"overflow": "hidden"}} className={"table-row " + (finishedSets[exerciseIndex]?.[index] ? 'bg-green-400' : '')}>
+                                    <div key={index} style={{"overflow": "hidden"}} className={"table-row " + (finishedSets[exerciseIndex]?.[index] ? 'bg-go-900' : '')}>
                                         <div className="table-cell">{index + 1}</div>
                                         <div className="table-cell">prev</div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""}/></div>
@@ -316,7 +315,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                 )
                                 }
                             </div>
-                            <Container className="justify-content-center flex"><Button size="sm" className="w-100" onClick={() => addSet(exerciseIndex, exercise.info.time ? true : false)}>+ Add Set</Button></Container>
+                            <Container className="justify-content-center flex"><Button type="go" className="w-100" onClick={() => addSet(exerciseIndex, exercise.info.time ? true : false)}>+ Add Set</Button></Container>
                         </div>
                     )
                 })
@@ -324,7 +323,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
             <Container className="justify-content-center flex">
                 <AddExercise addExercises={addExercises}/>
             </Container>
-        </>
+        </div>
     )
 }
 

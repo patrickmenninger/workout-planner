@@ -15,7 +15,7 @@ export const WorkoutProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editMode, setEditMode] = useState('in-session');
   const [editWorkout, setEditWorkout] = useState(null);
-  const [finishedSets, setFinishedSets] = useState(null);
+  const [finishedSets, setFinishedSets] = useState([]);
 
   const workoutHistoryMutation = useMutation({
     mutationFn: async (newWorkoutHistory) => {
@@ -114,6 +114,7 @@ export const WorkoutProvider = ({ children }) => {
     const initialFinishedSets = workoutCopy.exercises.map(exercise => 
         Array((exercise.info.reps !== null ? exercise.info.reps.length : exercise.info.time.length) || 1).fill(false)
     )
+    console.log(initialFinishedSets)
     setFinishedSets(initialFinishedSets);
 
     setExerciseSession(currExerciseSession);
@@ -182,8 +183,8 @@ export const WorkoutProvider = ({ children }) => {
         // Create workout
         const newWorkout = {
             user_id: editWorkout.exercises[0].info.user_id,
-            notes: editWorkout.notes,
-            name: editWorkout.name,
+            notes: notes,
+            name: name,
         }
         
         createWorkoutMutation.mutate({newWorkout, workoutExercises: editWorkout.exercises});
