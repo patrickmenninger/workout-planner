@@ -5,7 +5,7 @@ import EditWorkoutOffcanvas from "./EditWorkoutOffcanvas"
 const NavigationBar = () => {
 
   return (
-        <Navbar fixed="bottom" className="pb-3 flex-column bg-side-900">
+        <Navbar fixed="bottom" className="pb-4 flex-column bg-side-900">
             <EditWorkoutOffcanvas />
             <Container className="justify-content-center">
                 <Nav className="w-full justify-content-evenly">
