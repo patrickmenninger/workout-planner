@@ -81,24 +81,27 @@ button:focus-visible {
   }
 }
 
-.active-workout td {
-    text-align: center;
+.table-container {
+    display: table;
+    width: 90%;
 }
 
-.active-workout input[type="number"] {
-    background-color: grey;
+.table-row{
+    display: table-row;
     width: 100%;
-    border-radius: 0.20em;
-    text-align: center;
 }
 
-.active-workout td:has(input[type="checkbox"]) {
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+.table-cell {
+    display: table-cell;
+    padding: 1px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+    text-align: end;
 }
-.active-workout td:has(span) {
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+
+.table-cell input[type="number"] {
+    width: 50%;
+    vertical-align: middle;
+    background-color: lightgray;
+    text-align: center;
 }

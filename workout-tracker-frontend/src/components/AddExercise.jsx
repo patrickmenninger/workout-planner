@@ -5,37 +5,51 @@ import { useExercises } from "../hooks/useExerciseData.mjs";
 const AddExercise = ({addExercises}) => {
 
     const [show, setShow] = useState(false);
-    const [exercises, setExercises] = useState([]);
+    const [selectedExercises, setSelectedExercises] = useState([]);
+    
+    const [search, setSearch] = useState("");
 
     const handleClose = () => {
-        setExercises(fetchedExercises.map(exercise => ({...exercise, selected: false})));
+        setSelectedExercises([]);
+        // setExercises(fetchedExercises.map(exercise => ({...exercise, selected: false})));
+        setSearch("");
         setShow(false);
     }
     const handleShow = () => setShow(true);
 
     const {data: fetchedExercises, isLoading: exercisesLoading, error: exercisesError} = useExercises();
 
-    useEffect(() => {
-        if (fetchedExercises) {
-            setExercises(fetchedExercises.map(exercise => ({...exercise, selected: false})));
-        }
-    }, [fetchedExercises])
+    // useEffect(() => {
+    //     if (fetchedExercises) {
+    //         setExercises(fetchedExercises.map(exercise => ({...exercise, selected: false})));
+    //     }
+    // }, [fetchedExercises]);
 
-    function selectExercise(exerciseName) {
-        setExercises((prev) => {
-            const result = prev.map((exercise) => {
-                return exercise.name === exerciseName
-                    ? {...exercise, selected: !exercise.selected}
-                    : exercise
-            });
-            return result;
-        })
+    function selectExercise(exercise) {
+        setSelectedExercises((prev) => {
+
+            const location = prev.indexOf(exercise);
+
+            if (location === -1) {
+                return [...prev, exercise];
+            } else {
+                prev.splice(location, 1);
+                return [...prev];
+            }
+
+        });
+        // setExercises((prev) => {
+        //     const result = prev.map((exercise) => {
+        //         return exercise.name === exerciseName
+        //             ? {...exercise, selected: !exercise.selected}
+        //             : exercise
+        //     });
+        //     return result;
+        // })
     }
 
     function addToWorkout() {
-        const formattedExercises = exercises.filter(exercise => exercise.selected);
-        
-        addExercises(formattedExercises);
+        addExercises(selectedExercises);
         
         handleClose();
     }
@@ -53,9 +67,12 @@ const AddExercise = ({addExercises}) => {
                     <Modal.Title>Modal heading</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {exercises && exercises.map((exercise) => {
-                        return <div onClick={() => selectExercise(exercise.name)} className={exercise.selected ? "border-s-blue-500 border-s-4" : ""} key={exercise.id}>{exercise.name}</div>
-                    })}
+                    <input type="text" onChange={(e) => setSearch(e.target.value)} value={search || ""} placeholder="Search exercises"/>
+                    <div className="overflow-y-scroll h-48">
+                        {fetchedExercises && fetchedExercises.filter(exercise => exercise.name.toLowerCase().includes(search.toLowerCase())).map((exercise) => {
+                            return <div onClick={() => selectExercise(exercise)} className={"py-2 " + (selectedExercises.find(selectedExercise => selectedExercise.name === exercise.name) ? "border-s-blue-500 border-s-4" : "")} key={exercise.id}>{exercise.name}</div>
+                        })}
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

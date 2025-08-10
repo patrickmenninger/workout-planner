@@ -29,6 +29,7 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.7.1",
+    "react-swipeable": "^7.0.2",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {

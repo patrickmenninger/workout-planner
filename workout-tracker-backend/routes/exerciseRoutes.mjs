@@ -33,8 +33,6 @@ router.get('/history', TokenMiddleware, async (req, res) => {
 
 router.post('/history', TokenMiddleware, async (req, res) => {
     // take array of exercise history and update
-    console.log(req.body);
-    
     const {error} = await supabase
         .from("exercise_history")
         .insert(req.body);
