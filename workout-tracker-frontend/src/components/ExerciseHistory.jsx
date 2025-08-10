@@ -5,9 +5,9 @@ const ExerciseHistory = ({exerciseHistory, workoutInfo, exerciseName, isCardio})
     <>
     <Card className="bg-side-900">
         <h4>{workoutInfo.name}</h4>
-        <div className="table-container mx-auto">
-            <p className="font-bold">{exerciseName}</p>
-            <p>{exerciseHistory.notes}</p>
+        <p className="font-bold">{exerciseName}</p>
+        <p>{exerciseHistory.name}</p>
+        <div className="table-container bg-main-900">
             <div className="table-row">
                 <div className="table-cell">SET</div>
                 {!isCardio && <div className="table-cell">WEIGHT & REPS</div>}
