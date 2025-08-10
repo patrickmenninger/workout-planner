@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { Card } from "react-bootstrap";
 import { useWorkoutHistory } from "../hooks/useWorkoutsData.mjs";
 import { useExerciseHistory } from "../hooks/useExerciseData.mjs";
+import Card from "../components/Card";
 
 const HomePage = () => {
 

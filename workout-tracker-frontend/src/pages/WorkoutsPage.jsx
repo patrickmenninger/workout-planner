@@ -1,10 +1,11 @@
-import { Card, Tab, Tabs, Button, Modal } from "react-bootstrap";
+import { Tab, Tabs, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlans } from "../hooks/usePlansData.mjs";
 import Workout from "../components/Workout";
 import { NavLink } from "react-router-dom";
 import { useEditWorkout } from "../context/WorkoutContext";
+import {Card, Button} from "../components/Tags"
 
 const WorkoutsPage = () => {
 
@@ -22,7 +23,7 @@ const WorkoutsPage = () => {
 
     return (
         <>
-        <Tabs defaultActiveKey="plans" justify>
+        <Tabs defaultActiveKey="plans" justify className="bg-side-900">
             <Tab eventKey="plans" title="Plans">
                 {
                 plans && plans.map(plan =>
@@ -32,8 +33,9 @@ const WorkoutsPage = () => {
                 )
                 }
             </Tab>
-            <Tab eventKey="workouts" title="Workouts">
-                <Button onClick={() => startWorkout({name: "New Workout", exercises: []})}>Quick Start Workout</Button>
+            <Tab eventKey="workouts" title="Workouts" className="bg-main-900">
+                <Button onClick={() => startWorkout({name: "New Workout", exercises: []})} className="w-50 text-center mx-auto my-4" type="go">Quick Start Workout</Button>
+                <Button onClick={handleCreateWorkout} className="w-50 mx-auto my-4 text-center" type="go">Create Workout</Button>
                 {
                     workouts && workouts.map(workout => 
                         <div  key={workout.id}>
@@ -41,7 +43,6 @@ const WorkoutsPage = () => {
                         </div>
                     )
                 }
-                <Button onClick={handleCreateWorkout}>Create Workout</Button>
             </Tab>
         </Tabs>
         </>

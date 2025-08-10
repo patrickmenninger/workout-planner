@@ -1,4 +1,4 @@
-import { Button, Table, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { useEditWorkout } from '../context/WorkoutContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -6,16 +6,24 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import AddExercise from './AddExercise';
 import { NavLink } from 'react-router-dom';
+import { Button } from './Tags';
 
 const EditWorkout = ({mode = 'in-session'}) => {
+
+    function test() {
+        console.log("FINSIHD", finishedSets);
+        console.log("EXERICSE", exercises)
+    }
 
     const {user} = useAuth();
 
     const {
         exerciseSession,
+        finishedSets,
         setExerciseSession,
         editWorkout,
         setEditWorkout,
+        setFinishedSets,
     } = useEditWorkout();
 
     const [exercises, setExercises] = useState(
@@ -46,8 +54,6 @@ const EditWorkout = ({mode = 'in-session'}) => {
             setExercises(updated);
         }
 
-        console.log(updated);
-
     }
 
     function addSet(exerciseIndex, isCardio) {
@@ -66,6 +72,12 @@ const EditWorkout = ({mode = 'in-session'}) => {
         updatedExercise.info.sets = (updatedExercise.info.sets || 0) + 1;
         updated[exerciseIndex] = updatedExercise;
 
+        // return;
+        console.log("BEFORE", finishedSets)
+        const updatedFinishedSets = [...finishedSets];
+        updatedFinishedSets[exerciseIndex] = [...updatedFinishedSets[exerciseIndex], false];
+        setFinishedSets(updatedFinishedSets);
+        console.log("AFTER", updatedFinishedSets)
 
         if (mode === 'in-session') {
             setExerciseSession(updated);
@@ -92,6 +104,10 @@ const EditWorkout = ({mode = 'in-session'}) => {
         }
         updatedExercise.info.sets = Math.max((updatedExercise.info.sets || 0) - 1, 0);
         updated[exerciseIndex] = updatedExercise;
+
+        const updatedFinishedSets = [...finishedSets];
+        updatedFinishedSets[exerciseIndex].splice(index, 1);
+        setFinishedSets(updatedFinishedSets);
 
         if (mode === 'in-session') {
             setExerciseSession(updated);
@@ -176,6 +192,15 @@ const EditWorkout = ({mode = 'in-session'}) => {
         const updatedWorkout = [...exercises, ...newFormattedExercises];
         setExercises(updatedWorkout);
 
+        // Map each new exercise to an array with one entry of false (b/c there is only one set)
+        const addedExerciseSets = newFormattedExercises.map(exercise => 
+            Array((exercise.info.reps !== null ? exercise.info.reps.length : exercise.info.time.length) || 1).fill(false)
+        )
+        setFinishedSets([
+            ...finishedSets,
+            ...addedExerciseSets
+        ]);
+        
         if (mode === 'in-session') {
             setExerciseSession(updatedWorkout);
         } else {
@@ -205,6 +230,10 @@ const EditWorkout = ({mode = 'in-session'}) => {
 
         setExercises(reindexedWorkout);
 
+        const updatedFinishedSets = [...finishedSets];
+        updatedFinishedSets.splice(exerciseIndex, 1);
+        setFinishedSets(updatedFinishedSets);
+
         if (mode === 'in-session') {
             setExerciseSession(reindexedWorkout);
         } else {
@@ -218,8 +247,15 @@ const EditWorkout = ({mode = 'in-session'}) => {
 
     }
 
+    function handleFinishSet(exerciseIndex, setIndex) {
+        const updatedFinishedSets = [...finishedSets];
+        updatedFinishedSets[exerciseIndex][setIndex] = !updatedFinishedSets[exerciseIndex][setIndex];
+        setFinishedSets(updatedFinishedSets);
+    }
+
     return (
-        <>
+        <div style={{color: "var(--color-text"}}>
+            <Button onClick={test}>TEST</Button>
             {
                 exercises && exercises.map((exercise, exerciseIndex) => {
                     return (
@@ -243,31 +279,43 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                 </div>
                                 {
                                 exercise.info.reps && exercise.info.reps.map((currSet, index) => 
-                                    <div key={index} style={{"overflow": "hidden"}} className="table-row">
+                                    <div key={index} style={{"overflow": "hidden"}} className={"table-row " + (finishedSets[exerciseIndex]?.[index] ? 'bg-go-900' : '')}>
                                         <div className="table-cell">{index + 1}</div>
                                         <div className="table-cell">prev</div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("weight", exerciseIndex, index, e.target.value)} value={exercise.info.weight[index] || ""}/></div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("reps", exerciseIndex, index, e.target.value)} value={exercise.info.reps[index] || ""}/></div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("rpe", exerciseIndex, index, e.target.value)} value={exercise.info.rpe[index] || ""}/></div>
-                                        {mode === "in-session" && (<div className='text-center table-cell'><input type="checkbox"></input></div>)}
+                                        {mode === "in-session" && (<div className='text-center table-cell'>
+                                            <input 
+                                                type="checkbox" 
+                                                checked={finishedSets[exerciseIndex]?.[index] || false}
+                                                onChange={() => handleFinishSet(exerciseIndex, index)}
+                                            />
+                                            </div>)}
                                         <div className="table-cell"><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></div>
                                     </div>
                                 )
                                 }
                                 {
                                 exercise.info.time && exercise.info.time.map((currSet, index) =>
-                                    <div key={index} style={{"overflow": "hidden"}} className="table-row">
+                                    <div key={index} style={{"overflow": "hidden"}} className={"table-row " + (finishedSets[exerciseIndex]?.[index] ? 'bg-go-900' : '')}>
                                         <div className="table-cell">{index + 1}</div>
                                         <div className="table-cell">prev</div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""}/></div>
                                         <div className="table-cell"><input type="number" onChange={(e) => updateSet("distance", exerciseIndex, index, e.target.value)} value={exercise.info.distance[index] || ""}/></div>
-                                        {mode === "in-session" && (<div className='text-center table-cell'><input type="checkbox"></input></div>)}
+                                        {mode === "in-session" && (<div className='text-center table-cell'>
+                                            <input 
+                                                type="checkbox"
+                                                checked={finishedSets[exerciseIndex]?.[index] || false}
+                                                onChange={() => handleFinishSet(exerciseIndex, index)}
+                                            />
+                                            </div>)}
                                         <div className="table-cell"><span><FontAwesomeIcon icon={faXmark} onClick={() => removeSet(exerciseIndex, exercise.info.time ? true : false, index)}/></span></div>
                                     </div>
                                 )
                                 }
                             </div>
-                            <Container className="justify-content-center flex"><Button size="sm" className="w-100" onClick={() => addSet(exerciseIndex, exercise.info.time ? true : false)}>+ Add Set</Button></Container>
+                            <Container className="justify-content-center flex"><Button type="go" className="w-100" onClick={() => addSet(exerciseIndex, exercise.info.time ? true : false)}>+ Add Set</Button></Container>
                         </div>
                     )
                 })
@@ -275,7 +323,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
             <Container className="justify-content-center flex">
                 <AddExercise addExercises={addExercises}/>
             </Container>
-        </>
+        </div>
     )
 }
 

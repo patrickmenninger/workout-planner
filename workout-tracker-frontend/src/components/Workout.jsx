@@ -1,10 +1,11 @@
-import { Card, Button, Dropdown } from "react-bootstrap"
+import { Dropdown } from "react-bootstrap"
 import { useEditWorkout } from "../context/WorkoutContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteWorkout } from "../services/WorkoutService.mjs";
+import { Card, Button } from "./Tags";
 
 const Workout = ({workout}) => {
 
@@ -30,21 +31,21 @@ const Workout = ({workout}) => {
 
     return (
         <>
-        <Card key={workout.id} className="my-3 py-3 px-2">
+        <Card key={workout.id}>
             <div className="flex justify-content-between align-items-center">
                 <h5>{workout.name}</h5>
-                <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <Dropdown className="bg-side" drop="end">
+                    <Dropdown.Toggle id="dropdown-basic"> 
                         <FontAwesomeIcon icon={faBars}/>
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item><Button onClick={() => handleEditWorkout(workout)}>Edit</Button></Dropdown.Item>
-                        <Dropdown.Item><Button className="btn-danger" onClick={() => handleDeleteWorkout()}>Delete</Button></Dropdown.Item>
+                    <Dropdown.Menu className="bg-side flex ">
+                        <Dropdown.Item><Button onClick={() => handleEditWorkout(workout)} type="go">Edit</Button></Dropdown.Item>
+                        <Dropdown.Item><Button onClick={() => handleDeleteWorkout()} type="danger">Delete</Button></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
-                <Card className="px-3">
+                <div>
                     <div className="flex justify-content-between">
                         <span>Exercises</span>
                         <span>Sets</span>
@@ -66,8 +67,10 @@ const Workout = ({workout}) => {
 
                         })
                     }
-                <Button onClick={() => startWorkout(workout)}>Start Workout</Button>
-                </Card>
+                    <div className="flex justify-content-center">
+                        <Button onClick={() => startWorkout(workout)} className="mx-auto w-[40%] text-center" type="go">Start Workout</Button>
+                    </div>
+                </div>
         </Card>
         </>
     )

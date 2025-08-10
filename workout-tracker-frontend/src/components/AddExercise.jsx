@@ -1,6 +1,7 @@
-import { Button, Modal} from "react-bootstrap"
+import { Modal} from "react-bootstrap"
 import { useEffect, useState } from "react";
 import { useExercises } from "../hooks/useExerciseData.mjs";
+import { Button } from "./Tags";
 
 const AddExercise = ({addExercises}) => {
 
@@ -19,12 +20,6 @@ const AddExercise = ({addExercises}) => {
 
     const {data: fetchedExercises, isLoading: exercisesLoading, error: exercisesError} = useExercises();
 
-    // useEffect(() => {
-    //     if (fetchedExercises) {
-    //         setExercises(fetchedExercises.map(exercise => ({...exercise, selected: false})));
-    //     }
-    // }, [fetchedExercises]);
-
     function selectExercise(exercise) {
         setSelectedExercises((prev) => {
 
@@ -38,14 +33,6 @@ const AddExercise = ({addExercises}) => {
             }
 
         });
-        // setExercises((prev) => {
-        //     const result = prev.map((exercise) => {
-        //         return exercise.name === exerciseName
-        //             ? {...exercise, selected: !exercise.selected}
-        //             : exercise
-        //     });
-        //     return result;
-        // })
     }
 
     function addToWorkout() {
@@ -59,14 +46,14 @@ const AddExercise = ({addExercises}) => {
 
     return (
         <>
-            <Button size="sm" className="w-100" onClick={handleShow}>
+            <Button type="go" className="w-100" onClick={handleShow}>
                 + Add Exercise
             </Button>
             <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className="bg-main-900 border-0 text-text">
                     <Modal.Title>Modal heading</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="bg-main-900 text-text">
                     <input type="text" onChange={(e) => setSearch(e.target.value)} value={search || ""} placeholder="Search exercises"/>
                     <div className="overflow-y-scroll h-48">
                         {fetchedExercises && fetchedExercises.filter(exercise => exercise.name.toLowerCase().includes(search.toLowerCase())).map((exercise) => {
@@ -74,11 +61,11 @@ const AddExercise = ({addExercises}) => {
                         })}
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                <Modal.Footer className="border-0" style={{backgroundColor: "var(--color-main-900)", color: "var(--color-text)"}}> 
+                    <Button onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={addToWorkout}>
+                    <Button type="go" onClick={addToWorkout}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

@@ -6,17 +6,21 @@ const LoginPage = () => {
 
     const navigate = useNavigate();
 
-    const handleLogin = async(e) => {
-        e.preventDefault();
+    const handleLogin = async(loginName) => {
 
-        console.log(await login("patrick.menninger@gmail.com", "1@yk%B%580usYf"));
+        if (loginName === "dev") {
+            await login("snotpart@gmail.com", "%E4i&lS!CEU1aJ");
+        } else if (loginName === "patrick") {
+            console.log(await login("patrick.menninger@gmail.com", "1@yk%B%580usYf"));
+        }
 
         navigate("/", {replace: true});
     }
 
   return (
     <div>
-        <button onClick={(e) => handleLogin(e)}>Login</button>
+        <button onClick={() => handleLogin("patrick")}>Login Patrick</button>
+        <button onClick={() => handleLogin("dev")}>Login Dev</button>
     </div>
   )
 }
