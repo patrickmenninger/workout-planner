@@ -46,12 +46,12 @@ const AddExercise = ({addExercises}) => {
 
     return (
         <>
-            <Button type="go" className="w-100" onClick={handleShow}>
+            <Button className="w-100 text-center" onClick={handleShow}>
                 + Add Exercise
             </Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton className="bg-main-900 border-0 text-text">
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Add Exercises</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="bg-main-900 text-text">
                     <input type="text" onChange={(e) => setSearch(e.target.value)} value={search || ""} placeholder="Search exercises"/>

@@ -32,7 +32,7 @@ const Workout = ({workout}) => {
     return (
         <>
         <Card key={workout.id}>
-            <div className="flex justify-content-between align-items-center">
+            <div className="flex justify-content-between align-items-center border-b-[1px] mb-1">
                 <h5>{workout.name}</h5>
                 <Dropdown className="bg-side" drop="end">
                     <Dropdown.Toggle id="dropdown-basic"> 
@@ -47,8 +47,8 @@ const Workout = ({workout}) => {
             </div>
                 <div>
                     <div className="flex justify-content-between">
-                        <span>Exercises</span>
-                        <span>Sets</span>
+                        <span className="font-bold">Exercises</span>
+                        <span className="font-bold">Sets</span>
                     </div>
                     {
                     workout.exercises
@@ -68,7 +68,7 @@ const Workout = ({workout}) => {
                         })
                     }
                     <div className="flex justify-content-center">
-                        <Button onClick={() => startWorkout(workout)} className="mx-auto w-[40%] text-center" type="go">Start Workout</Button>
+                        <Button onClick={() => startWorkout(workout)} className="mx-auto w-100 mt-3" type="go">Start Workout</Button>
                     </div>
                 </div>
         </Card>

@@ -1,9 +1,9 @@
-import { Button, Card } from "react-bootstrap";
+import { Card } from "./Tags";
 
 const ExerciseHistory = ({exerciseHistory, workoutInfo, exerciseName, isCardio}) => {
   return (
     <>
-    <Card>
+    <Card className="bg-side-900">
         <h4>{workoutInfo.name}</h4>
         <div className="table-container mx-auto">
             <p className="font-bold">{exerciseName}</p>

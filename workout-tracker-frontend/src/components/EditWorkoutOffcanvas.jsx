@@ -68,15 +68,15 @@ const EditWorkoutOffcanvas = () => {
                             )} 
                             finishedSets={finishedSets} 
                             setFinishedSets={setFinishedSets}/>
-                        {editMode !== 'in-session' && <Button type="go" onClick={() => saveWorkout(title, notes)} size="sm">Save</Button>}
-                        {editMode === "in-session" && (<Button type="go" onClick={() => endWorkout(title, notes)}>Finish</Button>)}
+                        {editMode !== 'in-session' && (<Button onClick={() => saveWorkout(title, notes)}>Save</Button>)}
+                        {editMode === "in-session" && (<Button onClick={() => endWorkout(title, notes)} type="go">Finish</Button>)}
                     </div>
                 </div>
                 <div className="w-100">
                     <textarea value={notes || ""} onChange={(e) => updateNotes(e.target.value)} className="justify-self-start w-100" placeholder="Workout notes"/>
                 </div>
             </Offcanvas.Header>
-            <Offcanvas.Body className="bg-main-900">
+            <Offcanvas.Body className="bg-main-900 flex flex-col">
                 <EditWorkout mode={editMode} initialWorkout={workoutData}/>
                 {editMode === "in-session" && (<Button type="danger" onClick={stopWorkout}>Cancel Workout</Button>)}
                 {editMode !== "in-session" && (<Button type="danger" onClick={stopWorkout}>Discard</Button>)}

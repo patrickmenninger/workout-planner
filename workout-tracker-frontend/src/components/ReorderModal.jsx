@@ -1,7 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
+import { Button } from "./Tags";
 import {
     DndContext,
     closestCenter,
@@ -43,10 +44,15 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
 
     const [show, setShow] = useState(false);
     const [items, setItems] = useState(sortedItems);
+    const [localFinishedSets, setLocalFinishedSets] = useState([...finishedSets]);
 
     useEffect(() => {
         setItems(sortedItems);
     }, [sortedItems]);
+
+    useEffect(() => {
+        setLocalFinishedSets(...finishedSets);
+    }, [finishedSets])
 
     const sensors = useSensors(useSensor(PointerSensor));
 
@@ -67,7 +73,7 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
         }));
         const updatedFinishedSets = arrayMove(finishedSets, oldIndex, newIndex);
         
-        setFinishedSets(updatedFinishedSets);
+        setLocalFinishedSets(updatedFinishedSets);
         setItems(newItems);
     };
 
@@ -77,6 +83,8 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
     }
     const handleShow = () => setShow(true);
     const handleSave = () => {
+
+        setFinishedSets(localFinishedSets);
 
         if (mode === "in-session") {
             updateFn(items)
@@ -94,10 +102,10 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
     <>
         <FontAwesomeIcon icon={faUpDown} onClick={handleShow}/>
         <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Header closeButton className="bg-main-900 border-0 text-text">
+                <Modal.Title>Reorder Exercises</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="bg-main-900 text-text">
                 <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -113,11 +121,11 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
                     </SortableContext>
                 </DndContext>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
+            <Modal.Footer className="border-0" style={{backgroundColor: "var(--color-main-900)", color: "var(--color-text)"}}>
+                <Button type="danger" onClick={handleClose}>
+                    Discard
                 </Button>
-                <Button variant="primary" onClick={handleSave}>
+                <Button type="go" onClick={handleSave}>
                     Save Changes
                 </Button>
             </Modal.Footer>
@@ -140,7 +148,7 @@ const SortableItem = ({ item }) => {
         transition,
         padding: 16,
         marginBottom: 8,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'var(--color-side-900)',
         border: '1px solid #ccc',
         borderRadius: 4,
         cursor: 'grab'
@@ -148,7 +156,7 @@ const SortableItem = ({ item }) => {
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        <strong>{item.model.name}</strong> — Order: {item.info.order_index}
+        <strong>{item.model.name}</strong>
         </div>
     );
 };

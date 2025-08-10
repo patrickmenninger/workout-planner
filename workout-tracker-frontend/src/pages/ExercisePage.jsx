@@ -50,18 +50,22 @@ const ExercisePage = () => {
             <h3>{currExercise.name}</h3>
             <div> </div>
         </div>
-        <Tabs defaultActiveKey="history" justify>
+        <Tabs defaultActiveKey="history" justify className='bg-side-900'>
             <Tab eventKey="history" title="History">
                 {
-                    currExerciseHistory && workoutsHistory && currExerciseHistory.map((history, index) => {
-                        return <ExerciseHistory 
-                            key={history.id}
-                            exerciseName={currExercise.name}
-                            isCardio={currExercise.muscle_groups.includes("Cardio")}
-                            exerciseHistory={history} 
-                            workoutInfo={workoutsHistory.find(workout => workout.id === currExerciseHistory[index].user_workout_id)}
-                        />
-                    })
+                    currExerciseHistory.length !== 0 ? (
+                        workoutsHistory && currExerciseHistory.map((history, index) => {
+                            return <ExerciseHistory 
+                                key={history.id}
+                                exerciseName={currExercise.name}
+                                isCardio={currExercise.muscle_groups.includes("Cardio")}
+                                exerciseHistory={history} 
+                                workoutInfo={workoutsHistory.find(workout => workout.id === currExerciseHistory[index].user_workout_id)}
+                            />
+                        })
+                    ) : (
+                        <div>No exercise history</div>
+                    )
                 }
             </Tab>
             <Tab eventKey="other" title="Other">

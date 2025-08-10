@@ -12,7 +12,9 @@ export const Button = ({children, type = "primary", className = "", onClick = nu
 
     const styling = 
         type === "primary" 
-        ? ""
+        ? "bg-accent-900 hover:bg-accent-500"
+        : type === "secondary" 
+        ? "bg-side-900 hover:bg-side-500"
         : type === "go"
         ? "bg-go-900 hover:bg-go-500"
         : type === "danger"
@@ -21,7 +23,7 @@ export const Button = ({children, type = "primary", className = "", onClick = nu
 
   return (
     <div 
-        className={`${styling} py-1 rounded-2 px-2 mx-2 hover:cursor-pointer ${className}`}
+        className={`${styling} py-1 rounded-2 px-2 hover:cursor-pointer text-center ${className}`}
         onClick={onClick}
     >
         {children}

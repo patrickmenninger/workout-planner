@@ -25,6 +25,10 @@ const WorkoutsPage = () => {
         <>
         <Tabs defaultActiveKey="plans" justify className="bg-side-900">
             <Tab eventKey="plans" title="Plans">
+                <div className="my-3 flex justify-content-center">
+                    <Button className="w-50">Create Plan</Button>
+                </div>
+                <h1 className="m-3">Plans</h1>
                 {
                 plans && plans.map(plan =>
                     <Card key={plan.id}>
@@ -34,8 +38,11 @@ const WorkoutsPage = () => {
                 }
             </Tab>
             <Tab eventKey="workouts" title="Workouts" className="bg-main-900">
-                <Button onClick={() => startWorkout({name: "New Workout", exercises: []})} className="w-50 text-center mx-auto my-4" type="go">Quick Start Workout</Button>
-                <Button onClick={handleCreateWorkout} className="w-50 mx-auto my-4 text-center" type="go">Create Workout</Button>
+                <div className="flex flex-col align-items-center my-3 gap-3">
+                    <Button onClick={() => startWorkout({name: "New Workout", exercises: []})} className="w-50">Quick Start Workout</Button>
+                    <Button onClick={handleCreateWorkout} className="w-50">Create Workout</Button>
+                </div>
+                <h1 className="m-3">Workouts</h1>
                 {
                     workouts && workouts.map(workout => 
                         <div  key={workout.id}>
