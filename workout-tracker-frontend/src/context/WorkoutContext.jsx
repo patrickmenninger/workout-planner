@@ -15,6 +15,7 @@ export const WorkoutProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editMode, setEditMode] = useState('in-session');
   const [editWorkout, setEditWorkout] = useState(null);
+  const [finishedSets, setFinishedSets] = useState(null);
 
   const workoutHistoryMutation = useMutation({
     mutationFn: async (newWorkoutHistory) => {
@@ -109,6 +110,12 @@ export const WorkoutProvider = ({ children }) => {
             }
         }
     });
+
+    const initialFinishedSets = workoutCopy.exercises.map(exercise => 
+        Array((exercise.info.reps !== null ? exercise.info.reps.length : exercise.info.time.length) || 1).fill(false)
+    )
+    setFinishedSets(initialFinishedSets);
+
     setExerciseSession(currExerciseSession);
     setEditMode('in-session');
     setEditWorkout(null);
@@ -128,6 +135,7 @@ export const WorkoutProvider = ({ children }) => {
   const closeOffcanvas = () => setIsOpen(false);
 
   const stopWorkout = () => {
+    setFinishedSets([]);
     setWorkoutData(null);
     setIsOpen(false);
     setWorkoutSession(null);
@@ -227,6 +235,7 @@ export const WorkoutProvider = ({ children }) => {
         isOpen,
         editMode,
         editWorkout,
+        finishedSets,
         startWorkout,
         openForEdit,
         openOffcanvas,
@@ -236,7 +245,8 @@ export const WorkoutProvider = ({ children }) => {
         stopWorkout,
         setExerciseSession,
         setWorkoutSession,
-        setEditWorkout
+        setEditWorkout,
+        setFinishedSets
       }}
     >
       {children}

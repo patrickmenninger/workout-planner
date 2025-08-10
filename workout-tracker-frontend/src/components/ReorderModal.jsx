@@ -16,9 +16,8 @@ import {
     verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useEditWorkout } from "../context/WorkoutContext";
 
-const ReorderModal = ({mode, data, updateFn}) => {
+const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSets = null}) => {
 
     const sortedItems = useMemo(() => {
         if (data) {
@@ -66,7 +65,9 @@ const ReorderModal = ({mode, data, updateFn}) => {
                 order_index: i + 1
             }
         }));
-
+        const updatedFinishedSets = arrayMove(finishedSets, oldIndex, newIndex);
+        
+        setFinishedSets(updatedFinishedSets);
         setItems(newItems);
     };
 
