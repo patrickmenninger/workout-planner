@@ -9,23 +9,25 @@ const HomePage = () => {
     const {data: exerciseHistory, isLoading: exercisesLoading, error: exercisesError} = useExerciseHistory();
 
   return (
-    <>
+    <div>
         {
         workoutHistory && workoutHistory.map(workout =>
-            <Card key={workout.id}>
-                <h3>{workout.name}</h3>
+            <Card key={workout.id} bg={"bg-side-900 m-3"}>
+                <div className="border-b-1 mb-1">
+                    <h5>{workout.name}</h5>
+                </div>
                 {
                 exerciseHistory && exerciseHistory
                     .filter(exercise => workout.id === exercise.user_workout_id)
                     .sort((a, b) => a.date > b.date)
                     .map(exercise => 
-                        <h5 key={workout.id + " " + exercise.id}>{exercise.model.name}</h5>
+                        <div key={workout.id + " " + exercise.id}>{exercise.model.name}</div>
                     )
                 }
             </Card>
         )
         }
-    </>
+    </div>
   )
 }
 

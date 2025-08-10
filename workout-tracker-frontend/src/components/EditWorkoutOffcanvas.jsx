@@ -78,7 +78,7 @@ const EditWorkoutOffcanvas = () => {
             </Offcanvas.Header>
             <Offcanvas.Body className="bg-main-900 flex flex-col">
                 <EditWorkout mode={editMode} initialWorkout={workoutData}/>
-                {editMode === "in-session" && (<Button type="danger" className="w-50" onClick={stopWorkout}>Cancel Workout</Button>)}
+                {editMode === "in-session" && (<Button type="danger" onClick={stopWorkout}>Cancel Workout</Button>)}
                 {editMode !== "in-session" && (<Button type="danger" onClick={stopWorkout}>Discard</Button>)}
             </Offcanvas.Body>
         </Offcanvas>
