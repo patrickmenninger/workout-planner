@@ -27,7 +27,7 @@ const WorkoutsPage = () => {
                 {
                 plans && plans.map(plan =>
                     <Card key={plan.id}>
-                        <NavLink to={`/plan/${plan.id}`}>{plan.name}</NavLink>
+                        <NavLink to={`/plans/${plan.id}`}>{plan.name}</NavLink>
                     </Card>
                 )
                 }

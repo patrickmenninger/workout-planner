@@ -7,6 +7,7 @@ import WorkoutsPage from "./pages/WorkoutsPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PlanPage from "./pages/PlanPage";
+import ExercisePage from "./pages/ExercisePage";
 
 import "./index.css"
 
@@ -18,8 +19,9 @@ function App() {
             <Route path="/" element={<AuthenticatedRoute><MainLayout/></AuthenticatedRoute>}>
                 <Route path="/" element={<HomePage />}/>
                 <Route path="/workouts" element={<WorkoutsPage />}/>
-                <Route path="/plan/:id" element={<PlanPage />}/>
+                <Route path="/plans/:id" element={<PlanPage />}/>
             </Route>
+            <Route path="/exercises/:id" element={<AuthenticatedRoute><ExercisePage /></AuthenticatedRoute>}/>
             <Route path="/login" element={<LoginPage />}/>
         </Routes>
     </BrowserRouter>

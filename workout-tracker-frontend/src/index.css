@@ -81,28 +81,6 @@ button:focus-visible {
   }
 }
 
-/* .active-workout td {
-    text-align: center;
-}
-
-.active-workout input[type="number"] {
-    background-color: grey;
-    width: 100%;
-    border-radius: 0.20em;
-    text-align: center;
-}
-
-.active-workout td:has(input[type="checkbox"]) {
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-}
-.active-workout td:has(span) {
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-} */
-
 .table-container {
     display: table;
     width: 90%;
@@ -124,4 +102,6 @@ button:focus-visible {
 .table-cell input[type="number"] {
     width: 50%;
     vertical-align: middle;
+    background-color: lightgray;
+    text-align: center;
 }

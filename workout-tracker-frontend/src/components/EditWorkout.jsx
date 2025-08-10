@@ -5,6 +5,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import AddExercise from './AddExercise';
+import { NavLink } from 'react-router-dom';
 
 const EditWorkout = ({mode = 'in-session'}) => {
 
@@ -29,10 +30,8 @@ const EditWorkout = ({mode = 'in-session'}) => {
 
     function updateSet(type, exerciseIndex, index, value) {
 
-        console.log(exercises);
         const updated = [...exercises]; // shallow copy of the array
         const updatedExerciseInfo = { ...updated[exerciseIndex].info }; // copy the exercise object
-        console.log(updatedExerciseInfo);
 
         // Clone the specific array (weight, reps, etc.) to avoid mutating it directly
         const updatedArray = [...updatedExerciseInfo[type]];
@@ -226,7 +225,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
                     return (
                         <div key={exerciseIndex}>
                             <div className='flex justify-content-between align-items-center'>
-                                <h5>{exercise.model.name}</h5>
+                                <NavLink to={`/exercises/${exercise.model.id}`}>{exercise.model.name}</NavLink>
                                 <FontAwesomeIcon icon={faXmark} onClick={() => removeExercise(exerciseIndex)}/>
                             </div>
                             <textarea value={exercise.info.notes || ""} onChange={(e) => updateExercise(exerciseIndex, e.target.value)} placeholder='Exercise notes'/>
