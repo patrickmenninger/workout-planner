@@ -34,8 +34,8 @@ const WorkoutsPage = () => {
                 }
             </Tab>
             <Tab eventKey="workouts" title="Workouts" className="bg-main-900">
-                <Button onClick={() => startWorkout({name: "New Workout", exercises: []})} className="w-50 text-center mx-auto my-4" type="go">Quick Start Workout</Button>
-                <Button onClick={handleCreateWorkout} className="w-50 mx-auto my-4 text-center" type="go">Create Workout</Button>
+                <Button onClick={() => startWorkout({name: "New Workout", exercises: []})} className="w-50 mx-auto my-3">Quick Start Workout</Button>
+                <Button onClick={handleCreateWorkout} className="w-50 mx-auto my-3">Create Workout</Button>
                 {
                     workouts && workouts.map(workout => 
                         <div  key={workout.id}>
