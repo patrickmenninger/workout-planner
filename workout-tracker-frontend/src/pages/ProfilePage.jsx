@@ -6,6 +6,7 @@ const ProfilePage = () => {
 
     async function handleLogout() {
         await logout();
+        window.location.reload();
     }
 
   return (
