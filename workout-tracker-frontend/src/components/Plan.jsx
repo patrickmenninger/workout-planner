@@ -31,7 +31,6 @@ const Plan = ({plan, drop}) => {
 
   return (
         <Card key={plan.id}>
-            <Button onClick={test}>TEST</Button>
             <div className="flex justify-between">
                 <NavLink to={`/plans/${plan.id}`}>{plan.name}</NavLink>
                 <Dropdown className="bg-side" drop={drop}>

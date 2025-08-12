@@ -33,7 +33,6 @@ const TrainingPage = () => {
         <>
         <Tabs defaultActiveKey="plans" justify className="bg-side-900">
             <Tab eventKey="plans" title="Plans">
-                <Button onClick={test}>Test</Button>
                 <div className="my-3 flex justify-content-center">
                     <Button onClick={handleCreatePlan} className="w-50">Create Plan</Button>
                 </div>

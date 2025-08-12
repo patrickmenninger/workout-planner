@@ -50,7 +50,6 @@ const EditPlanOffcanvas = () => {
 
     return (
         <>
-        <Button onClick={test}>TEST</Button>
         {showResume && <Button type="go" className="my-2" onClick={openOffcanvas}>Resume</Button>}
         <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%", color: "var(--color-text-primary)"}}>
             <Offcanvas.Header className="flex flex-col gap-4 bg-main-900">
