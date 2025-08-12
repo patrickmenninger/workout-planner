@@ -20,7 +20,7 @@ const NavigationBar = () => {
                         Home
                     </NavLink>
                     <NavLink 
-                        to="/workouts" 
+                        to="/training" 
                         className={({isActive}) => 
                             isActive ? '!text-accent-900' : 'nav-link-custom'
                         }
