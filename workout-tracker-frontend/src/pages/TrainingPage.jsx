@@ -6,17 +6,25 @@ import Workout from "../components/Workout";
 import { NavLink } from "react-router-dom";
 import { useEditWorkout } from "../context/WorkoutContext";
 import {Card, Button} from "../components/Tags"
+import { useEditPlan } from "../context/PlanContext";
+import Plan from "../components/Plan";
 
-const WorkoutsPage = () => {
+const TrainingPage = () => {
 
     const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
     const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
-    const {openForEdit, startWorkout} = useEditWorkout();
+    const {openForEdit: openWorkoutForEdit, startWorkout} = useEditWorkout();
+    const {openForEdit: openPlanForEdit} = useEditPlan();
 
     const handleCreateWorkout = () => {
         console.log("CREATING");
-        openForEdit('create', { name: 'New Workout', notes: "", exercises: [] });
+        openWorkoutForEdit('create', { name: 'New Workout', notes: "", exercises: [] });
     };
+
+    const handleCreatePlan = () => {
+        console.log("CREATING PLAN");
+        openPlanForEdit('create', { name: 'New Plan', notes: "", workouts: [] });
+    }
 
     if (workoutsLoading || plansLoading) return <div>Loading</div>
     if (workoutsError || plansError) return <div>{workoutsError} {plansError}</div>
@@ -25,16 +33,17 @@ const WorkoutsPage = () => {
         <>
         <Tabs defaultActiveKey="plans" justify className="bg-side-900">
             <Tab eventKey="plans" title="Plans">
+                <Button onClick={test}>Test</Button>
                 <div className="my-3 flex justify-content-center">
-                    <Button className="w-50">Create Plan</Button>
+                    <Button onClick={handleCreatePlan} className="w-50">Create Plan</Button>
                 </div>
                 <h1 className="m-3">Plans</h1>
                 {
-                plans && plans.map(plan =>
-                    <Card key={plan.id}>
-                        <NavLink to={`/plans/${plan.id}`}>{plan.name}</NavLink>
-                    </Card>
-                )
+                    plans && plans.map(plan =>
+                        <div key={plan.id}>
+                            <Plan plan={plan} drop={"end"}/>
+                        </div>
+                    )
                 }
             </Tab>
             <Tab eventKey="workouts" title="Workouts" className="bg-main-900">
@@ -46,7 +55,7 @@ const WorkoutsPage = () => {
                 {
                     workouts && workouts.map(workout => 
                         <div  key={workout.id}>
-                            <Workout workout={workout}/>
+                            <Workout workout={workout} drop="end"/>
                         </div>
                     )
                 }
@@ -56,4 +65,4 @@ const WorkoutsPage = () => {
     )
 }
 
-export default WorkoutsPage
+export default TrainingPage

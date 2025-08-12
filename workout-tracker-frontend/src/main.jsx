@@ -6,6 +6,7 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthProvider.jsx';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { WorkoutProvider } from './context/WorkoutContext.jsx';
+import { PlanProvider } from './context/PlanContext.jsx';
 
 const queryClient = new QueryClient();
 
@@ -13,9 +14,11 @@ createRoot(document.getElementById('root')).render(
 //   <StrictMode>
     <AuthProvider>
         <QueryClientProvider client={queryClient}>
-            <WorkoutProvider>
-                <App />
-            </WorkoutProvider>
+            <PlanProvider>
+                <WorkoutProvider>
+                    <App />
+                </WorkoutProvider>
+            </PlanProvider>
         </QueryClientProvider>
     </AuthProvider>
 //   </StrictMode>,

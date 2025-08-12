@@ -10,11 +10,6 @@ import { Button } from './Tags';
 
 const EditWorkout = ({mode = 'in-session'}) => {
 
-    function test() {
-        console.log("FINSIHD", finishedSets);
-        console.log("EXERICSE", exercises)
-    }
-
     const {user} = useAuth();
 
     const {
@@ -290,9 +285,9 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                         <div key={index} style={rowStyle} className="table-row">
                                             <div className="table-cell">{index + 1}</div>
                                             <div className="table-cell">prev</div>
-                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("weight", exerciseIndex, index, e.target.value)} value={exercise.info.weight[index] || ""}/></div>
-                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("reps", exerciseIndex, index, e.target.value)} value={exercise.info.reps[index] || ""}/></div>
-                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("rpe", exerciseIndex, index, e.target.value)} value={exercise.info.rpe[index] || ""}/></div>
+                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("weight", exerciseIndex, index, e.target.value)} value={exercise.info.weight[index] || ""} inputMode='numeric' pattern='[0-9]*'/></div>
+                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("reps", exerciseIndex, index, e.target.value)} value={exercise.info.reps[index] || ""} inputMode='numeric' pattern='[0-9]*'/></div>
+                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("rpe", exerciseIndex, index, e.target.value)} value={exercise.info.rpe[index] || ""} inputMode='numeric' pattern='[0-9]*'/></div>
                                             {mode === "in-session" && (<div className='text-center table-cell'>
                                                 <input 
                                                     type="checkbox" 
@@ -317,8 +312,8 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                         <div key={index} style={rowStyle} className="table-row">
                                             <div className="table-cell">{index + 1}</div>
                                             <div className="table-cell">prev</div>
-                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""}/></div>
-                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("distance", exerciseIndex, index, e.target.value)} value={exercise.info.distance[index] || ""}/></div>
+                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("time", exerciseIndex, index, e.target.value)} value={exercise.info.time[index] || ""} inputMode='numeric' pattern='[0-9]*'/></div>
+                                            <div className="table-cell"><input type="number" onChange={(e) => updateSet("distance", exerciseIndex, index, e.target.value)} value={exercise.info.distance[index] || ""} inputMode='numeric' pattern='[0-9]*'/></div>
                                             {mode === "in-session" && (<div className='text-center table-cell'>
                                                 <input 
                                                     type="checkbox"

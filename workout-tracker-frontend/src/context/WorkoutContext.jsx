@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
-import { addWorkoutExercises, createWorkout, finishWorkout, updateWorkout } from '../services/WorkoutService.mjs';
-import { finishExercises } from '../services/ExerciseService.mjs';
+import { addWorkoutExercises, createWorkout, addWorkoutHistory, updateWorkout } from '../services/WorkoutService.mjs';
+import { addExerciseHistory } from '../services/ExerciseService.mjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const WorkoutContext = createContext();
@@ -19,7 +19,7 @@ export const WorkoutProvider = ({ children }) => {
 
   const workoutHistoryMutation = useMutation({
     mutationFn: async (newWorkoutHistory) => {
-        const id = (await finishWorkout(newWorkoutHistory)).data;
+        const id = (await addWorkoutHistory(newWorkoutHistory)).data;
         return id;
     },
     onSuccess: () => {
@@ -30,7 +30,7 @@ export const WorkoutProvider = ({ children }) => {
   
   const exerciseHistoryMutation = useMutation({
     mutationFn: async (newExerciseHistory) => {
-        await finishExercises(newExerciseHistory);
+        await addExerciseHistory(newExerciseHistory);
     },
     onSuccess: () => {
         queryClient.invalidateQueries(["exercise_history"]);

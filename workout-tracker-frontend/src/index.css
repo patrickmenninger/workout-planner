@@ -41,6 +41,10 @@ div .dropdown-menu.show {
     @apply py-1;
 }
 
+textarea:focus {
+    background-color: var(--color-side-900);
+}
+
 div .dropdown-menu.show a {
     @apply px-1 py-1;
     font-size: small;
@@ -57,14 +61,20 @@ div.dropdown-menu.show button {
 .dropend .btn-primary:hover,
 .dropend .btn.show,
 .dropend .btn-active,
-.dropend .btn:first-child:active {
+.dropend .btn:first-child:active,
+.dropstart .btn-primary,
+.dropstart .btn-primary:hover,
+.dropstart .btn.show,
+.dropstart .btn-active,
+.dropstart .btn:first-child:active {
     background-color: transparent;
     border: none;
     padding-right: 0;
     padding-left: 0;
 }
 
-div .dropend .dropdown-toggle::after {
+div .dropend .dropdown-toggle::after,
+div .dropstart .dropdown-toggle::before {
     display: none
 }
 
@@ -192,7 +202,16 @@ button:focus-visible {
     text-align: center;
 }
 
+.table-container .table-row:nth-child(even) .table-cell input[type="number"]:focus {
+    background-color: var(--color-main-900)
+}
+
+.table-container .table-row .table-cell input[type="number"]:focus {
+    background-color: var(--color-side-900);
+}
+
 .table-container .table-row:nth-child(even) {
     background-color: var(--color-side-900);
 }
+
 /* #endregion */

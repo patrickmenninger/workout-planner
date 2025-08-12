@@ -9,10 +9,6 @@ import { Button } from './Tags';
 
 const EditWorkoutOffcanvas = () => {
 
-    function test() {
-        console.log(editWorkout);
-    }
-
     // For handling active workout off canvas
     const {
         workoutData, 
@@ -67,7 +63,9 @@ const EditWorkoutOffcanvas = () => {
                                 : {mode: "not-in-session", data: editWorkout.exercises, updateFn: setEditWorkout}
                             )} 
                             finishedSets={finishedSets} 
-                            setFinishedSets={setFinishedSets}/>
+                            setFinishedSets={setFinishedSets}
+                            isWorkout
+                        />
                         {editMode !== 'in-session' && (<Button onClick={() => saveWorkout(title, notes)}>Save</Button>)}
                         {editMode === "in-session" && (<Button onClick={() => endWorkout(title, notes)} type="go">Finish</Button>)}
                     </div>

@@ -3,7 +3,7 @@ import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import {AuthenticatedRoute} from "./routes/AuthenticatedRoute";
 
 import MainLayout from "./layouts/MainLayout";
-import WorkoutsPage from "./pages/WorkoutsPage";
+import TrainingPage from "./pages/TrainingPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PlanPage from "./pages/PlanPage";
@@ -19,7 +19,7 @@ function App() {
         <Routes>
             <Route element={<AuthenticatedRoute><MainLayout/></AuthenticatedRoute>}>
                 <Route path="/" element={<HomePage />}/>
-                <Route path="/workouts" element={<WorkoutsPage />}/>
+                <Route path="/training" element={<TrainingPage />}/>
                 <Route path="/plans/:id" element={<PlanPage />}/>
                 <Route path="/profile" element={<ProfilePage />} />
             </Route>

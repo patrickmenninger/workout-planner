@@ -8,7 +8,7 @@ export const getWorkoutHistoryByUser = () => {
     return axiosClient.get("/workouts/history");
 }
 
-export const finishWorkout = (workoutSession) => {
+export const addWorkoutHistory = (workoutSession) => {
     return axiosClient.post("/workouts/history", workoutSession);
 }
 

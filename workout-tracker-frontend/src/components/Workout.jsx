@@ -2,14 +2,25 @@ import { Dropdown } from "react-bootstrap"
 import { useEditWorkout } from "../context/WorkoutContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteWorkout } from "../services/WorkoutService.mjs";
 import { Card, Button } from "./Tags";
+import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 
-const Workout = ({workout}) => {
+const Workout = ({workout, drop}) => {
 
     const queryClient = useQueryClient();
+
+    const {data: listOfWorkouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
+
+    const [currWorkout, setCurrWorkout] = useState(workout);
+
+    useEffect(() => {
+        if (!workout.exercises) {
+            setCurrWorkout(listOfWorkouts.find(currWorkout => currWorkout.id === workout.id));
+        }
+    }, [listOfWorkouts, workout])
 
     const handleEditWorkout = (workout) => {
         openForEdit('pre-session', workout);
@@ -29,12 +40,15 @@ const Workout = ({workout}) => {
 
     const {startWorkout, openForEdit} = useEditWorkout();
 
+    if (workoutsLoading) return <div>Loading</div>
+    if (workoutsError) return <div>{workoutsError}</div>
+
     return (
         <>
         <Card key={workout.id}>
             <div className="flex justify-content-between align-items-center border-b-[1px] mb-1">
                 <h5>{workout.name}</h5>
-                <Dropdown className="bg-side" drop="end">
+                <Dropdown className="bg-side" drop={drop}>
                     <Dropdown.Toggle id="dropdown-basic"> 
                         <FontAwesomeIcon icon={faBars}/>
                     </Dropdown.Toggle>
@@ -51,7 +65,7 @@ const Workout = ({workout}) => {
                         <span className="font-bold">Sets</span>
                     </div>
                     {
-                    workout.exercises
+                    currWorkout.exercises && currWorkout.exercises
                         .sort((a, b) => a.info.order_index - b.info.order_index)
                         .map(exercise => {
 

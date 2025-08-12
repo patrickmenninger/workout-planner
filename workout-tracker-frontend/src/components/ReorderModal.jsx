@@ -18,24 +18,33 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSets = null}) => {
+const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSets = null, isWorkout = false}) => {
 
     const sortedItems = useMemo(() => {
         if (data) {
             const sorted = [...data]
-                .sort((a, b) => a.info.order_index - b.info.order_index)
-                .filter(item => item.info?.order_index != null);
+                .sort((a, b) => isWorkout ? (a.info.order_index - b.info.order_index) : (a.order_index - b.order_index))
+                .filter(item => isWorkout ? (item.info?.order_index != null) : (item.order_index != null));
             
             // Check for duplicate order_index values
-            const orderIndices = sorted.map(item => item.info.order_index);
+            const orderIndices = sorted.map(item => isWorkout ? item.info.order_index : item.order_index);
             const duplicates = orderIndices.filter((item, index) => orderIndices.indexOf(item) !== index);
             if (duplicates.length > 0) {
                 console.warn('Duplicate order_index values found:', duplicates);
                 // Reindex to fix duplicates
-                return sorted.map((item, i) => ({
-                    ...item,
-                    info: { ...item.info, order_index: i + 1 }
-                }));
+                return sorted.map((item, i) => {
+
+                    if (isWorkout) {
+                        return {
+                            ...item,
+                            info: { ...item.info, order_index: i + 1 }
+                        }
+                    } else {
+                        return {
+                            ...item
+                        }
+                    }
+                });
             }
             return sorted;
         }
@@ -44,14 +53,16 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
 
     const [show, setShow] = useState(false);
     const [items, setItems] = useState(sortedItems);
-    const [localFinishedSets, setLocalFinishedSets] = useState([...finishedSets]);
+    const [localFinishedSets, setLocalFinishedSets] = useState(isWorkout ? [...finishedSets] : [])
 
     useEffect(() => {
         setItems(sortedItems);
     }, [sortedItems]);
 
     useEffect(() => {
-        setLocalFinishedSets(...finishedSets);
+        if (isWorkout) {
+            setLocalFinishedSets(...finishedSets);
+        }
     }, [finishedSets])
 
     const sensors = useSensors(useSensor(PointerSensor));
@@ -61,19 +72,32 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
 
         if (!over || active.id === over.id) return;
 
-        const oldIndex = items.findIndex((item) => item.info.order_index === active.id);
-        const newIndex = items.findIndex((item) => item.info.order_index === over.id);
+        const oldIndex = items.findIndex((item) => isWorkout ? (item.info.order_index === active.id) : (item.order_index === active.id));
+        const newIndex = items.findIndex((item) => isWorkout ? (item.info.order_index === over.id) : (item.order_index === over.id));
 
-        const newItems = arrayMove(items, oldIndex, newIndex).map((item, i) => ({
-            ...item,
-            info: {
-                ...item.info,
-                order_index: i + 1
+        const newItems = arrayMove(items, oldIndex, newIndex).map((item, i) => {
+
+            if (isWorkout) {
+                return {
+                    ...item,
+                    info: {
+                        ...item.info,
+                        order_index: i + 1
+                    }
+                }
+            } else {
+                return {
+                    ...item
+                }
             }
-        }));
-        const updatedFinishedSets = arrayMove(finishedSets, oldIndex, newIndex);
-        
-        setLocalFinishedSets(updatedFinishedSets);
+
+        });
+
+        if (isWorkout) {
+            const updatedFinishedSets = arrayMove(finishedSets, oldIndex, newIndex);
+            
+            setLocalFinishedSets(updatedFinishedSets);
+        }
         setItems(newItems);
     };
 
@@ -84,7 +108,9 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
     const handleShow = () => setShow(true);
     const handleSave = () => {
 
-        setFinishedSets(localFinishedSets);
+        if (isWorkout) {
+            setFinishedSets(localFinishedSets);
+        }
 
         if (mode === "in-session") {
             updateFn(items)
@@ -102,7 +128,7 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
     <>
         <FontAwesomeIcon icon={faUpDown} onClick={handleShow}/>
         <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton className="bg-main-900 border-0 text-text">
+            <Modal.Header closeButton className="bg-main-900 border-0 text-text-primary">
                 <Modal.Title>Reorder Exercises</Modal.Title>
             </Modal.Header>
             <Modal.Body className="bg-main-900 text-text">
@@ -112,16 +138,16 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
                 onDragEnd={handleDragEnd}
                 >
                     <SortableContext
-                        items={items.map((item) => item.info.order_index)}
+                        items={items.map((item) => isWorkout ? item.info.order_index : item.order_index)}
                         strategy={verticalListSortingStrategy}
                     >
                         {items.map((item) => (
-                        <SortableItem key={item.info.order_index} item={item} />
+                        <SortableItem key={isWorkout ? item.info.order_index : item.order_index} item={item} />
                         ))}
                     </SortableContext>
                 </DndContext>
             </Modal.Body>
-            <Modal.Footer className="border-0" style={{backgroundColor: "var(--color-main-900)", color: "var(--color-text)"}}>
+            <Modal.Footer className="border-0" style={{backgroundColor: "var(--color-main-900)", color: "var(--color-text-primary)"}}>
                 <Button type="danger" onClick={handleClose}>
                     Discard
                 </Button>
@@ -141,7 +167,7 @@ const SortableItem = ({ item }) => {
         setNodeRef,
         transform,
         transition
-    } = useSortable({ id: item.info.order_index });
+    } = useSortable({ id: item.info ? item.info.order_index : item.order_index});
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -151,12 +177,13 @@ const SortableItem = ({ item }) => {
         backgroundColor: 'var(--color-side-900)',
         border: '1px solid #ccc',
         borderRadius: 4,
-        cursor: 'grab'
+        cursor: 'grab',
+        color: 'var(--color-text-primary)'
     };
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        <strong>{item.model.name}</strong>
+        <strong>{item.model ? item.model.name : item.name}</strong>
         </div>
     );
 };

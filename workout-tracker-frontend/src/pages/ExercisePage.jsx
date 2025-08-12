@@ -34,11 +34,6 @@ const ExercisePage = () => {
         }
     }, [exercisesHistory]);
 
-    function test() {
-        console.log(workoutsHistory);
-        console.log(currExerciseHistory);
-    }
-    
     if (exercisesLoading || exercisesHistoryLoading) return <div>Loading</div>
     if (exercisesHistoryError || exercisesError) return <div>{exercisesHistoryError} {exercisesError}</div>
     if (!currExercise) return <div>Exercise not found</div>;
@@ -46,7 +41,7 @@ const ExercisePage = () => {
   return (
     <>
         <div className="flex justify-content-between">
-            <NavLink to="/workouts"><FontAwesomeIcon icon={faArrowLeft}/></NavLink>
+            <NavLink to="/training"><FontAwesomeIcon icon={faArrowLeft}/></NavLink>
             <h3>{currExercise.name}</h3>
             <div> </div>
         </div>
