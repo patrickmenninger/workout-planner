@@ -39,9 +39,9 @@ const Workout = ({workout}) => {
                         <FontAwesomeIcon icon={faBars}/>
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu className="bg-side flex ">
-                        <Dropdown.Item><Button onClick={() => handleEditWorkout(workout)} type="go">Edit</Button></Dropdown.Item>
+                    <Dropdown.Menu className="bg-side flex">
                         <Dropdown.Item><Button onClick={() => handleDeleteWorkout()} type="danger">Delete</Button></Dropdown.Item>
+                        <Dropdown.Item><Button onClick={() => handleEditWorkout(workout)}>Edit</Button></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
@@ -68,7 +68,7 @@ const Workout = ({workout}) => {
                         })
                     }
                     <div className="flex justify-content-center">
-                        <Button onClick={() => startWorkout(workout)} className="mx-auto w-100 mt-3" type="go">Start Workout</Button>
+                        <Button onClick={() => startWorkout(workout)} className="mx-auto w-100 mt-3">Start Workout</Button>
                     </div>
                 </div>
         </Card>

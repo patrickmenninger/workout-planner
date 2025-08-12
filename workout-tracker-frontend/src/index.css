@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-    --color-main-900: oklch(0.1556 0.0244 348.64);
-    --color-side-900: oklch(0.4078 0.0333 289.42);
-    --color-accent-900: oklch(0.6465 0.0306 201.97);
-    --color-text: oklch(0.959 0.014 101.29);
-    --color-danger-900: oklch(0.2667 0.1077 27.18);
-    --color-danger-500: oklch(0.2167 0.0781 27.18);
-    --color-go-900: oklch(0.7836 0.0634 128.97);
-    --color-go-500: oklch(0.3196 0.0954 141.53);
+    --color-main-900: oklch(0.1822 0 0);
+    --color-side-900: oklch(0.235 0 0);
+    --color-border-900: oklch(0.2931 0 0);
+    --color-accent-900: oklch(0.739 0.151559 166.9408);
+    --color-accent-500: oklch(0.7917 0.152569 172.626);
+    --color-text-primary: oklch(0.9067 0 0);
+    --color-text-secondary: oklch(0.5642 0 0);
+    --color-danger-900: oklch(0.6931 0.1968 24.77);
+    --color-danger-500: oklch(0.6254 0.1968 24.77);
+    --color-go-900: oklch(0.5108 0.1472 147.66);
+    --color-go-500: oklch(0.4873 0.1348 147.66);
     --color-side-accent-900: oklch(0.921 0.0977 109.44)
 }
 
@@ -29,10 +32,11 @@
 
 /* #region dropdown */
 div .dropdown-item {
-    color: var(--color-text)
+    color: var(--color-text-primary)
 }
 div .dropdown-menu.show {
-    background-color: var(--color-accent-900);
+    background-color: var(--color-side-900);
+    border: 1px solid var(--color-border-900);
     display: flex;
     @apply py-1;
 }
@@ -66,13 +70,13 @@ div .dropend .dropdown-toggle::after {
 
 div .dropdown-menu.show a:hover {
     background-color: transparent;
-    color: var(--color-text)
+    color: var(--color-text-primary)
 }
 /* #endregion */
 
 /* #region navlink */
 .nav-link-custom {
-    @apply text-text no-underline
+    @apply text-text-primary no-underline
 }
 
 .nav-link-custom:hover {
@@ -85,6 +89,9 @@ div .nav-tabs .nav-link.active {
     background-color: var(--color-accent-900);
     border: none;
 }
+div .nav-tabs .nav-link {
+    color: var(--color-text-primary)
+}
 /* #endregion */
 
 
@@ -92,8 +99,7 @@ div .nav-tabs .nav-link.active {
 
 a {
   font-weight: 500;
-  color: oklch(0.7578 0.014 101.29);
-  text-decoration: none;
+  text-decoration: none !important;
 }
 a:hover {
   color: #535bf2;
@@ -118,7 +124,7 @@ body {
   height: 100%;
   width: 100%;
   background-color: var(--color-main-900) !important;
-  color: var(--color-text) !important;
+  color: var(--color-text-primary) !important;
 }
 
 h1 {

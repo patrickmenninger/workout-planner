@@ -52,8 +52,8 @@ const EditWorkoutOffcanvas = () => {
 
     return (
         <>
-        {showResume && <Button type="go" onClick={openOffcanvas}>Resume</Button>}
-        <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%", color: "var(--color-text)"}}>
+        {showResume && <Button type="go" className="my-2" onClick={openOffcanvas}>Resume</Button>}
+        <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%", color: "var(--color-text-primary)"}}>
             <Offcanvas.Header className="flex flex-col gap-4 bg-main-900">
                 <div className="flex justify-content-between w-100">
                     <div className="flex align-items-center gap-2">
@@ -73,7 +73,7 @@ const EditWorkoutOffcanvas = () => {
                     </div>
                 </div>
                 <div className="w-100">
-                    <textarea value={notes || ""} onChange={(e) => updateNotes(e.target.value)} className="justify-self-start w-100" placeholder="Workout notes"/>
+                    <textarea value={notes || ""} onChange={(e) => updateNotes(e.target.value)} className="justify-self-start w-100 text-text-secondary" placeholder="Workout notes"/>
                 </div>
             </Offcanvas.Header>
             <Offcanvas.Body className="bg-main-900 flex flex-col">

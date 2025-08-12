@@ -255,7 +255,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
     }
 
     return (
-        <div style={{color: "var(--color-text"}}>
+        <div style={{color: "var(--color-text-primary"}}>
             {
                 exercises && exercises.map((exercise, exerciseIndex) => {
 
@@ -265,7 +265,7 @@ const EditWorkout = ({mode = 'in-session'}) => {
                                 <NavLink to={`/exercises/${exercise.model.id}`}>{exercise.model.name}</NavLink>
                                 <FontAwesomeIcon icon={faXmark} onClick={() => removeExercise(exerciseIndex)}/>
                             </div>
-                            <textarea value={exercise.info.notes || ""} onChange={(e) => updateExercise(exerciseIndex, e.target.value)} placeholder='Exercise notes'/>
+                            <textarea value={exercise.info.notes || ""} onChange={(e) => updateExercise(exerciseIndex, e.target.value)} className="text-text-secondary" placeholder='Exercise notes'/>
                             <Button className="w-50">Rest Timer: {exercise.info.rest_timer} Seconds</Button>
                             <div className="table-container">
                                 <div className="table-row">

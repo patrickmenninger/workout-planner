@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useWorkoutHistory } from "../hooks/useWorkoutsData.mjs";
 import { useExerciseHistory } from "../hooks/useExerciseData.mjs";
-import Card from "../components/Card";
+import { Card } from "../components/Tags";
 
 const HomePage = () => {
 
