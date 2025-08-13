@@ -60,7 +60,7 @@ const EditPlanOffcanvas = () => {
                     </div>
                     <div className='flex align-items-center gap-2'>
                         {editPlan && editMode !== "create" && <ReorderModal 
-                            {...({mode: editMode, data: editPlan.workouts, updateFn: setEditPlan, isWorkout: true})} 
+                            {...({mode: editMode, data: editPlan.workouts, updateFn: setEditPlan})} 
                         />}
                         <Button onClick={() => savePlan(title, notes)}>Save</Button>
                     </div>
