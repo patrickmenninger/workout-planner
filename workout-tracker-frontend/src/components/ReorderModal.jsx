@@ -24,7 +24,7 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
         if (data) {
             const sorted = [...data]
                 .sort((a, b) => isWorkout ? (a.info.order_index - b.info.order_index) : (a.order_index - b.order_index))
-                .filter(item => isWorkout ? (item.info?.order_index != null) : (item.order_index != null));
+                .filter(item => isWorkout ? (item.info?.order_index != null) : (item?.order_index != null));
             
             // Check for duplicate order_index values
             const orderIndices = sorted.map(item => isWorkout ? item.info.order_index : item.order_index);

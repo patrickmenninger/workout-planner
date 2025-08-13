@@ -69,19 +69,17 @@ const EditWorkout = ({mode = 'in-session'}) => {
         updated[exerciseIndex] = updatedExercise;
 
         // return;
-        console.log("BEFORE", finishedSets)
-        const updatedFinishedSets = [...finishedSets];
-        updatedFinishedSets[exerciseIndex] = [...updatedFinishedSets[exerciseIndex], false];
-        setFinishedSets(updatedFinishedSets);
-        console.log("AFTER", updatedFinishedSets)
+        if (finishedSets.length !== 0) {
+            const updatedFinishedSets = [...finishedSets];
+            updatedFinishedSets[exerciseIndex] = [...updatedFinishedSets[exerciseIndex], false];
+            setFinishedSets(updatedFinishedSets);
+        }
 
         if (mode === 'in-session') {
             setExerciseSession(updated);
         } else {
             setExercises(updated);
         }
-
-        console.log(updated);
 
     }
 
@@ -101,9 +99,11 @@ const EditWorkout = ({mode = 'in-session'}) => {
         updatedExercise.info.sets = Math.max((updatedExercise.info.sets || 0) - 1, 0);
         updated[exerciseIndex] = updatedExercise;
 
-        const updatedFinishedSets = [...finishedSets];
-        updatedFinishedSets[exerciseIndex].splice(index, 1);
-        setFinishedSets(updatedFinishedSets);
+        if (finishedSets.length !== 0) {
+            const updatedFinishedSets = [...finishedSets];
+            updatedFinishedSets[exerciseIndex].splice(index, 1);
+            setFinishedSets(updatedFinishedSets);
+        }
 
         if (mode === 'in-session') {
             setExerciseSession(updated);

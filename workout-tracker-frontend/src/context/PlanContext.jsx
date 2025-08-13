@@ -1,12 +1,15 @@
 import { createContext, useContext, useState } from 'react';
-import { createPlan, addPlanWorkouts } from '../services/PlanService.mjs';
+import { createPlan, updatePlan, updatePlanWorkout } from '../services/PlanService.mjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from './AuthProvider';
 
 const PlanContext = createContext();
 
 export const PlanProvider = ({ children }) => {
 
   const queryClient = useQueryClient();
+
+  const {user} = useAuth();
 
   const [planData, setPlanData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -18,23 +21,57 @@ export const PlanProvider = ({ children }) => {
 
   const createPlanMutation = useMutation({
     mutationFn: async ({newPlan, planWorkouts}) => {
-        const id = (await createPlan(newPlan)).data;
-
-        const formattedPlanWorkouts = planWorkouts.map(workout => {
-            return {
-                plan_id: id,
-                workout_id: workout.id,
-                order_index: workout.order_index
-            };
-        });
-
-        await addPlanWorkouts(formattedPlanWorkouts, id);
-
+        await createPlan(newPlan);
     },
     onSuccess: () => {
         queryClient.invalidateQueries(["plans"]);
     }
   });
+
+  const updatePlanMutation = useMutation({
+    mutationFn: async ({updatedPlan, updatedWorkouts, id}) => {
+
+        // Save the plan
+        const insertedWorkouts = (
+            await updatePlan({
+                plan: updatedPlan, 
+                workouts: updatedWorkouts.map(({exercises, ...rest}) => rest)
+            }, id)
+        ).data
+
+        await Promise.all(updatedWorkouts.map(async workout => {
+
+            if (!workout.id) {
+                workout.id = insertedWorkouts.find(insWorkout => insWorkout.order_index === workout.order_index).id;
+            }
+
+            const {exercises, ...workoutWithoutExercises} = workout;
+
+            const formattedExercise = exercises.map(exercise => {
+                return {
+                    id: exercise.info.id,
+                    workout_id: workout.id,
+                    exercise_id: exercise.model.id,
+                    notes: exercise.info.notes,
+                    order_index: exercise.info.order_index,
+                    reps: exercise.info.reps,
+                    rpe: exercise.info.rpe,
+                    rest_timer: exercise.info.rest_timer,
+                    distance: exercise.info.distance,
+                    time: exercise.info.time,
+                    weight: exercise.info.weight
+                }
+            });
+
+            await updatePlanWorkout({workout: workoutWithoutExercises, exercises: formattedExercise}, id, workout.id);
+        }))
+
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries(["plans"]),
+        queryClient.invalidateQueries(["plan_workouts"])
+    }
+  })
 
   const openForEdit = (mode, plan) => {
     const planCopy = JSON.parse(JSON.stringify(plan));
@@ -61,23 +98,32 @@ export const PlanProvider = ({ children }) => {
         const formattedPlan = {
             plan: {
                 name: name,
-                notes: notes
+                notes: notes,
+                user_id: editPlan.user_id,
+                id: editPlan.id
             }
         }
-        formattedPlan.workouts = editPlan.workouts.map(workout => {
-            delete workout.exercises;
-            return workout;
+        
+        formattedPlan.workouts = editPlan.workouts.map((workout) => {
+
+            return {
+                name: workout.name,
+                notes: workout.notes,
+                order_index: workout.order_index,
+                plan_id: editPlan.id,
+                user_id: user.id,
+                id: workout.id,
+                exercises: workout.exercises
+            };
+
         })
 
-        console.log(formattedPlan);
-
-        // // Call Route in update workout mutation, invalidate all queries
-        // updateWorkoutMutation.mutate({workout: formattedWorkout.workout, exercises: formattedWorkout.exercises, id: editWorkout.id});
+        updatePlanMutation.mutate({updatedPlan: formattedPlan.plan, updatedWorkouts: formattedPlan.workouts, id: editPlan.id});
 
     } else if (editMode === "create") {
 
         const newPlan = {
-            user_id: editPlan.workouts[0].user_id,
+            user_id: user.id,
             name: name,
             notes: notes
         }

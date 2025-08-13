@@ -30,7 +30,6 @@ const ExercisePage = () => {
     useEffect(() => {
         if (exercisesHistory) {
             setCurrExerciseHistory(exercisesHistory.filter(exercise => exercise.exercise_id == id));
-            console.log(exercisesHistory)
         }
     }, [exercisesHistory]);
 

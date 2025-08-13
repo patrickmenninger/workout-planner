@@ -1,7 +1,7 @@
 import { Tab, Tabs, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
-import { usePlans } from "../hooks/usePlansData.mjs";
+import { usePlans, usePlanWorkouts } from "../hooks/usePlansData.mjs";
 import Workout from "../components/Workout";
 import { NavLink } from "react-router-dom";
 import { useEditWorkout } from "../context/WorkoutContext";
@@ -13,32 +13,48 @@ const TrainingPage = () => {
 
     const {data: workouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
     const {data: plans, isLoading: plansLoading, error: plansError} = usePlans();
+    const {data: planWorkouts, isLoading: planWorkoutsLoading, error: planWorkoutsError} = usePlanWorkouts();
+
     const {openForEdit: openWorkoutForEdit, startWorkout} = useEditWorkout();
     const {openForEdit: openPlanForEdit} = useEditPlan();
 
+    const enhancedPlans = plans?.map(plan => {
+        const enhancedWorkouts = plan.workouts?.map(workout => {
+            return planWorkouts?.find(w => w?.id === workout?.id);
+        })
+
+        return {
+            ...plan,
+            workouts: enhancedWorkouts
+        }
+    })
+
+    function test() {
+        console.log(enhancedPlans);
+    }
+
     const handleCreateWorkout = () => {
-        console.log("CREATING");
         openWorkoutForEdit('create', { name: 'New Workout', notes: "", exercises: [] });
     };
 
     const handleCreatePlan = () => {
-        console.log("CREATING PLAN");
         openPlanForEdit('create', { name: 'New Plan', notes: "", workouts: [] });
     }
 
-    if (workoutsLoading || plansLoading) return <div>Loading</div>
-    if (workoutsError || plansError) return <div>{workoutsError} {plansError}</div>
+    if (workoutsLoading || plansLoading || planWorkoutsLoading) return <div>Loading</div>
+    if (workoutsError || plansError || planWorkoutsError) return <div>{workoutsError} {plansError} {planWorkoutsError}</div>
 
     return (
         <>
         <Tabs defaultActiveKey="plans" justify className="bg-side-900">
             <Tab eventKey="plans" title="Plans">
+                <Button onClick={test}>TEST</Button>
                 <div className="my-3 flex justify-content-center">
                     <Button onClick={handleCreatePlan} className="w-50">Create Plan</Button>
                 </div>
                 <h1 className="m-3">Plans</h1>
                 {
-                    plans && plans.map(plan =>
+                    enhancedPlans && enhancedPlans.map(plan =>
                         <div key={plan.id}>
                             <Plan plan={plan} drop={"end"}/>
                         </div>
@@ -52,7 +68,7 @@ const TrainingPage = () => {
                 </div>
                 <h1 className="m-3">Workouts</h1>
                 {
-                    workouts && workouts.map(workout => 
+                    workouts && workouts.map(workout =>
                         <div  key={workout.id}>
                             <Workout workout={workout} drop="end"/>
                         </div>

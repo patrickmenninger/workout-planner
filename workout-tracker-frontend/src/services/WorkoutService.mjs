@@ -12,7 +12,7 @@ export const addWorkoutHistory = (workoutSession) => {
     return axiosClient.post("/workouts/history", workoutSession);
 }
 
-export const updateWorkout = (updatedWorkout, id) => {
+export const updateWorkout = (updatedWorkout, id) => {    
     return axiosClient.put(`/workouts/${id}`, updatedWorkout)
 }
 

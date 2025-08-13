@@ -7,23 +7,20 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteWorkout } from "../services/WorkoutService.mjs";
 import { Card, Button } from "./Tags";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
+import { usePlanWorkouts } from "../hooks/usePlansData.mjs";
 
-const Workout = ({workout, drop}) => {
+const Workout = ({workout, drop, planId = null}) => {
 
     const queryClient = useQueryClient();
 
-    const {data: listOfWorkouts, isLoading: workoutsLoading, error: workoutsError} = useWorkouts();
+    const {data: listOfWorkouts, isLoading: workoutsLoading, error: workoutsError} = usePlanWorkouts();
 
-    const [currWorkout, setCurrWorkout] = useState(workout);
-
-    useEffect(() => {
-        if (!workout.exercises) {
-            setCurrWorkout(listOfWorkouts.find(currWorkout => currWorkout.id === workout.id));
-        }
-    }, [listOfWorkouts, workout])
+    const fullWorkout = workout.exercises
+        ? workout
+        : listOfWorkouts?.find(currWorkout => currWorkout.id === workout.id)
 
     const handleEditWorkout = (workout) => {
-        openForEdit('pre-session', workout);
+        openForEdit('pre-session', workout, planId);
     };
 
     const deleteWorkoutMutation = useMutation({
@@ -40,15 +37,15 @@ const Workout = ({workout, drop}) => {
 
     const {startWorkout, openForEdit} = useEditWorkout();
 
-    if (workoutsLoading) return <div>Loading</div>
+    if (workoutsLoading || !fullWorkout) return <div>Loading</div>
     if (workoutsError) return <div>{workoutsError}</div>
 
     return (
         <>
-        <Card key={workout.id}>
+        <Card key={fullWorkout.id}>
             <div className="flex justify-content-between align-items-center border-b-[1px] mb-1">
-                <h5>{workout.name}</h5>
-                <Dropdown className="bg-side" drop={drop}>
+                <h5>{fullWorkout.name}</h5>
+                {(planId === null || planId !== -1) && <Dropdown className="bg-side" drop={drop}>
                     <Dropdown.Toggle id="dropdown-basic"> 
                         <FontAwesomeIcon icon={faBars}/>
                     </Dropdown.Toggle>
@@ -57,7 +54,7 @@ const Workout = ({workout, drop}) => {
                         <Dropdown.Item><Button onClick={() => handleDeleteWorkout()} type="danger">Delete</Button></Dropdown.Item>
                         <Dropdown.Item><Button onClick={() => handleEditWorkout(workout)}>Edit</Button></Dropdown.Item>
                     </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown>}
             </div>
                 <div>
                     <div className="flex justify-content-between">
@@ -65,8 +62,8 @@ const Workout = ({workout, drop}) => {
                         <span className="font-bold">Sets</span>
                     </div>
                     {
-                    currWorkout.exercises && currWorkout.exercises
-                        .sort((a, b) => a.info.order_index - b.info.order_index)
+                    fullWorkout.exercises
+                        ?.sort((a, b) => a.info.order_index - b.info.order_index)
                         .map(exercise => {
 
                             return (

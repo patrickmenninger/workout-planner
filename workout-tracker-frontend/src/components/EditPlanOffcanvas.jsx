@@ -59,8 +59,8 @@ const EditPlanOffcanvas = () => {
                         <Offcanvas.Title><input type="text" onChange={(e) => updateTitle(e.target.value)} value={title || ""}/></Offcanvas.Title>
                     </div>
                     <div className='flex align-items-center gap-2'>
-                        {editPlan && <ReorderModal 
-                            {...({mode: editMode, data: editPlan.workouts, updateFn: setEditPlan})} 
+                        {editPlan && editMode !== "create" && <ReorderModal 
+                            {...({mode: editMode, data: editPlan.workouts, updateFn: setEditPlan, isWorkout: true})} 
                         />}
                         <Button onClick={() => savePlan(title, notes)}>Save</Button>
                     </div>
@@ -70,8 +70,12 @@ const EditPlanOffcanvas = () => {
                 </div>
             </Offcanvas.Header>
             <Offcanvas.Body className="bg-main-900 flex flex-col">
-                <EditPlan initialPlan={planData}/>
-                <Button type="danger" onClick={handleClose}>Discard</Button>
+                {editMode !== "create" &&
+                    <>
+                        <EditPlan initialPlan={planData}/>
+                        <Button type="danger" onClick={handleClose}>Discard</Button>
+                    </>
+                }
             </Offcanvas.Body>
         </Offcanvas>
         </>

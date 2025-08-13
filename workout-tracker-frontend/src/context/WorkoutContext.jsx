@@ -2,12 +2,18 @@ import { createContext, useContext, useState } from 'react';
 import { addWorkoutExercises, createWorkout, addWorkoutHistory, updateWorkout } from '../services/WorkoutService.mjs';
 import { addExerciseHistory } from '../services/ExerciseService.mjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from './AuthProvider';
+import { useEditPlan } from './PlanContext';
 
 const WorkoutContext = createContext();
 
 export const WorkoutProvider = ({ children }) => {
 
   const queryClient = useQueryClient();
+
+  const {user} = useAuth();
+
+  const {editPlan, setEditPlan} = useEditPlan();
 
   const [workoutData, setWorkoutData] = useState(null);
   const [workoutSession, setWorkoutSession] = useState(null);
@@ -16,6 +22,7 @@ export const WorkoutProvider = ({ children }) => {
   const [editMode, setEditMode] = useState('in-session');
   const [editWorkout, setEditWorkout] = useState(null);
   const [finishedSets, setFinishedSets] = useState([]);
+  const [planId, setPlanId] = useState(false);
 
   const workoutHistoryMutation = useMutation({
     mutationFn: async (newWorkoutHistory) => {
@@ -114,7 +121,6 @@ export const WorkoutProvider = ({ children }) => {
     const initialFinishedSets = workoutCopy.exercises.map(exercise => 
         Array((exercise.info.reps !== null ? exercise.info.reps.length : exercise.info.time.length) || 1).fill(false)
     )
-    console.log(initialFinishedSets)
     setFinishedSets(initialFinishedSets);
 
     setExerciseSession(currExerciseSession);
@@ -123,10 +129,12 @@ export const WorkoutProvider = ({ children }) => {
     setIsOpen(true);
   };
 
-  const openForEdit = (mode, workout) => {
+  const openForEdit = (mode, workout, planId) => {
+
     const workoutCopy = JSON.parse(JSON.stringify(workout));
     setWorkoutData(workoutCopy);
 
+    setPlanId(planId);
     setEditMode(mode);
     setEditWorkout(workoutCopy);
     setIsOpen(true);
@@ -152,7 +160,7 @@ export const WorkoutProvider = ({ children }) => {
         const formattedWorkout = {
             workout: {
                 name: name,
-                notes: notes
+                notes: notes,
             },
             exercises: {
                 ...editWorkout.exercises
@@ -176,18 +184,51 @@ export const WorkoutProvider = ({ children }) => {
         })
 
         // Call Route in update workout mutation, invalidate all queries
-        updateWorkoutMutation.mutate({workout: formattedWorkout.workout, exercises: formattedWorkout.exercises, id: editWorkout.id});
+        console.log(planId);
+        if (planId !== -1 && planId !== null) {
+
+            editWorkout.name = name;
+            editWorkout.notes = notes;
+
+            setEditPlan((prev) => ({
+                ...prev,
+                workouts: prev.workouts.map(workout =>
+                    workout.id === editWorkout.id ? editWorkout : workout
+                )    
+            }))
+        } else {
+            console.log("UPDATING WORKOUTS");
+            updateWorkoutMutation.mutate({workout: formattedWorkout.workout, exercises: formattedWorkout.exercises, id: editWorkout.id});
+        }
 
     } else if (editMode === "create") {
 
         // Create workout
         const newWorkout = {
-            user_id: editWorkout.exercises[0].info.user_id,
+            user_id: user.id,
             notes: notes,
-            name: name,
+            order_index: editWorkout.order_index,
+            name: name
+        }
+
+        console.log(planId);
+        console.log(editWorkout);
+        if (planId && planId !== -1) {
+
+            newWorkout.plan_id = planId
+            newWorkout.exercises = [...editWorkout.exercises]
+
+            setEditPlan((prev) => ({
+                ...prev,
+                workouts: [
+                    ...prev.workouts,
+                    newWorkout
+                ]
+            }))
+        } else {
+            createWorkoutMutation.mutate({newWorkout, workoutExercises: editWorkout.exercises});
         }
         
-        createWorkoutMutation.mutate({newWorkout, workoutExercises: editWorkout.exercises});
     }
 
     stopWorkout()
@@ -203,8 +244,6 @@ export const WorkoutProvider = ({ children }) => {
     const workoutHistoryId = await workoutHistoryMutation.mutateAsync(workoutSession);
 
     const formattedExerciseSession = exerciseSession.map(exercise => {
-
-        console.log("FINISHED WOKROUT EXERCISE", exercise)
 
         const formattedExercise = {
             exercise_id: exercise.model.id,
