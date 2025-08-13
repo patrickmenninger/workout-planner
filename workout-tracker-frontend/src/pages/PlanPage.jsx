@@ -19,19 +19,8 @@ const PlanPage = () => {
     if (plansError || workoutsError) return <div>{plansError} {workoutsError}</div>
     if (!currPlan) return <div>Plan not found</div>;
 
-    function test() {
-        console.log("PLANS", plans),
-        console.log("WOKROUTS", workouts)
-    }
-
-    console.log("plans:", plans);
-console.log("currPlan:", currPlan);
-console.log("workouts:", workouts);
-
-
     return (
         <>
-            <Button onClick={test}>TEST</Button>
             <div className="flex justify-between m-2">
                 <NavLink to="/training" className="flex items-center justify-center w-8 h-8 self-center">
                     <FontAwesomeIcon icon={faArrowLeft} size="lg"/>

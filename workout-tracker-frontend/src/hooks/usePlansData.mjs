@@ -1,5 +1,4 @@
 import { getPlansByUser, getPlanWorkoutsByUser } from "../services/PlanService.mjs";
-import { getModelWorkoutsByUser } from "../services/WorkoutService.mjs";
 import { useQuery } from "@tanstack/react-query";
 
 export const usePlans = () =>
@@ -20,5 +19,6 @@ export const usePlanWorkouts = () =>
             console.log("Fetching plan workouts...");
             const { data } = await getPlanWorkoutsByUser();
             return data;
-        }
+        },
+        staleTime: 1000 * 60
     })

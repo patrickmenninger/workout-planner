@@ -64,10 +64,13 @@ const EditPlan = ({mode = 'create'}) => {
             <Button onClick={test}>TEST</Button>
             <Button onClick={handleCreateWorkout}>Create Workout</Button>
             {
-                workouts && workouts.sort((a, b) => a.order_index - b.order_index).map((workout, workoutIndex) =>
-                    <div key={workoutIndex}>
-                        <Workout workout={workout} drop="start" planId={workout.plan_id ? workout.plan_id : -1}/>
-                    </div>
+                workouts && workouts.sort((a, b) => a.order_index - b.order_index).map((workout, workoutIndex) => {
+                    return (
+                        <div key={workoutIndex}>
+                            <Workout workout={workout} drop="start" planId={workout.plan_id ? workout.plan_id : -1}/>
+                        </div>
+                    )
+                }
                 )
             }
             <div className="justify-content-center flex my-3 flex-column gap-3">

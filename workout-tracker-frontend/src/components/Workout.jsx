@@ -8,12 +8,15 @@ import { deleteWorkout } from "../services/WorkoutService.mjs";
 import { Card, Button } from "./Tags";
 import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlanWorkouts } from "../hooks/usePlansData.mjs";
+import { useEditPlan } from "../context/PlanContext";
 
 const Workout = ({workout, drop, planId = null}) => {
 
     const queryClient = useQueryClient();
 
     const {data: listOfWorkouts, isLoading: workoutsLoading, error: workoutsError} = usePlanWorkouts();
+
+    const {setEditPlan} = useEditPlan();
 
     const fullWorkout = workout.exercises
         ? workout
@@ -32,7 +35,17 @@ const Workout = ({workout, drop, planId = null}) => {
         }
     })
     const handleDeleteWorkout = () => {
-        deleteWorkoutMutation.mutate(workout.id);
+        if (planId > 0) {
+            setEditPlan((prev) => {
+                const updatedPlan = {...prev};
+                updatedPlan.workouts = prev.workouts.filter(currWorkout => currWorkout.id !== workout.id);
+
+                return updatedPlan;
+            })
+        } else {
+            deleteWorkoutMutation.mutate(workout.id);
+        }
+
     }
 
     const {startWorkout, openForEdit} = useEditWorkout();
