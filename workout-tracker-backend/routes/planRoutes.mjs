@@ -139,8 +139,6 @@ router.put("/:id", TokenMiddleware, async (req, res) => {
 
 router.put("/:planId/workouts/:workoutId", TokenMiddleware, async (req, res) => {
 
-    console.log(req.params.workoutId, req.body);
-
     // Edit workout info
     if (req.body.workout.name || req.body.workout.notes) {
         const {error} = await supabase

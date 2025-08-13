@@ -87,7 +87,8 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
                 }
             } else {
                 return {
-                    ...item
+                    ...item,
+                    order_index: i + 1
                 }
             }
 
@@ -115,10 +116,19 @@ const ReorderModal = ({mode, data, updateFn, finishedSets = null, setFinishedSet
         if (mode === "in-session") {
             updateFn(items)
         } else {
-            updateFn((prev) => ({
-                ...prev,
-                exercises: items
-            }));
+
+            if (isWorkout) {
+                updateFn((prev) => ({
+                    ...prev,
+                    exercises: items
+                }));
+            } else {
+                updateFn((prev) => ({
+                    ...prev,
+                    workouts: items
+                }))
+            }
+
         }
 
         handleClose();
