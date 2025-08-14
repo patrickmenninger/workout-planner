@@ -26,6 +26,10 @@ const EditPlan = ({mode = 'create'}) => {
         setWorkouts(editPlan?.workouts ? editPlan.workouts : []);
     }, [editPlan?.workouts, mode]);
 
+    useEffect(() => {
+        console.log("EFFECT", editPlan?.workouts);
+    }, [editPlan?.workouts])
+
     const handleCreateWorkout = () => {
         console.log("CREATE", workouts);
         openForEdit('create', { name: 'New Workout', notes: "", exercises: [], order_index: (workouts.length + 1) }, editPlan.id);
@@ -35,19 +39,32 @@ const EditPlan = ({mode = 'create'}) => {
     async function addWorkouts(newWorkouts) {
 
         let orderIdx = workouts.length;
-        console.log("BFEORE", workouts);
-        console.log("OREDER", orderIdx);
+        console.log("NEW", newWorkouts);
+        console.log("BEFORE", workouts);
         const newFormattedWorkouts = newWorkouts.map(workout => {
 
-            workout.order_index = ++orderIdx;
-            delete workout.id;
+            const updatedWorkout = {...workout};
+            updatedWorkout.order_index = ++orderIdx;
+            delete updatedWorkout.id;
+            updatedWorkout.exercises = updatedWorkout.exercises.map(exercise => {
+                const {
+                    info: { id, ...restInfo },
+                    ...restExercise
+                } = exercise;
 
-            return workout;
+                return {
+                    ...restExercise,
+                    info: restInfo
+                };
+            });
+
+            return updatedWorkout;
             
         });
+        console.log("AFTER", newFormattedWorkouts);
 
         const updatedWorkouts = [...workouts, ...newFormattedWorkouts];
-        console.log("UPDATED", updatedWorkouts);
+        console.log("UPDATED", updatedWorkouts)
         setWorkouts(updatedWorkouts);
         
         setEditPlan((prev) => {

@@ -50,7 +50,12 @@ const EditPlanOffcanvas = () => {
 
     return (
         <>
-        {showResume && <Button type="go" className="my-2" onClick={openOffcanvas}>Resume</Button>}
+        {showResume && 
+            <div className="flex justify-between w-50 mb-2">
+                <Button type="go" className="my-2" onClick={openOffcanvas}>Resume</Button>
+                <Button type="danger" className="my-2" onClick={handleClose}>Discard</Button>
+            </div>
+        }
         <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%", color: "var(--color-text-primary)"}}>
             <Offcanvas.Header className="flex flex-col gap-4 bg-main-900">
                 <div className="flex justify-content-between w-100">
@@ -70,12 +75,8 @@ const EditPlanOffcanvas = () => {
                 </div>
             </Offcanvas.Header>
             <Offcanvas.Body className="bg-main-900 flex flex-col">
-                {editMode !== "create" &&
-                    <>
-                        <EditPlan initialPlan={planData}/>
-                        <Button type="danger" onClick={handleClose}>Discard</Button>
-                    </>
-                }
+                    {editMode !== "create" && <EditPlan initialPlan={planData}/>}
+                    <Button type="danger" onClick={handleClose}>Discard</Button>
             </Offcanvas.Body>
         </Offcanvas>
         </>

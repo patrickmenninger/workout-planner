@@ -63,9 +63,9 @@ const TrainingPage = () => {
                 </div>
                 <h1 className="m-3">Workouts</h1>
                 {
-                    workouts && workouts.map(workout => {
+                    workouts && workouts.map((workout, idx) => {
                         return (
-                        <div  key={workout.id}>
+                        <div  key={idx}>
                             <Workout workout={workout} drop="end"/>
                         </div>
                         )

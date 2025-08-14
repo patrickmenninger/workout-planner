@@ -46,9 +46,19 @@ const EditWorkoutOffcanvas = () => {
         setNotes(newNotes);
     }
 
+    function handleClose() {
+        closeOffcanvas();
+        stopWorkout();
+    }
+
     return (
         <>
-        {showResume && <Button type="go" className="my-2" onClick={openOffcanvas}>Resume</Button>}
+        {showResume && 
+            <>
+                <Button type="go" className="my-2" onClick={openOffcanvas}>Resume</Button>
+                <Button type="danger" className="my-2" onClick={handleClose}>Discard</Button>
+            </>
+        }
         <Offcanvas show={isOpen} onHide={closeOffcanvas} placement='bottom' style={{height: "90%", color: "var(--color-text-primary)"}}>
             <Offcanvas.Header className="flex flex-col gap-4 bg-main-900">
                 <div className="flex justify-content-between w-100">

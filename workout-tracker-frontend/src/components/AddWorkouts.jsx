@@ -64,9 +64,8 @@ const AddWorkout = ({addWorkouts}) => {
                         <FontAwesomeIcon icon={faXmark} onClick={clearSearch}/>
                     </div>
                     <div className="overflow-y-scroll h-48">
-                        {fetchedWorkouts?.filter(workout => workout.name.toLowerCase().includes(search.toLowerCase())).map((workout) => {
-                            if (!workout.id) return;
-                            return <div onClick={() => selectWorkout(workout)} className={"py-2 text-text-primary " + (selectedWorkouts.find(selectedWorkout => selectedWorkout.name === workout.name) ? "border-s-accent-900 border-s-4" : "")} key={workout.id}>{workout.name}</div>
+                        {fetchedWorkouts?.filter(workout => workout.name.toLowerCase().includes(search.toLowerCase())).map((workout, idx) => {
+                            return <div onClick={() => selectWorkout(workout)} className={"py-2 text-text-primary " + (selectedWorkouts.find(selectedWorkout => selectedWorkout.name === workout.name) ? "border-s-accent-900 border-s-4" : "")} key={idx}>{workout.name}</div>
                         })}
                     </div>
                 </Modal.Body>

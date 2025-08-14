@@ -31,13 +31,15 @@ export const PlanProvider = ({ children }) => {
   const updatePlanMutation = useMutation({
     mutationFn: async ({updatedPlan, updatedWorkouts, id}) => {
 
-        // Save the plan
         const insertedWorkouts = (
             await updatePlan({
                 plan: updatedPlan, 
                 workouts: updatedWorkouts.map(({exercises, ...rest}) => rest)
             }, id)
         ).data
+
+        console.log("INSERTED", insertedWorkouts);
+        console.log("UPDATED", updatedWorkouts);
 
         await Promise.all(updatedWorkouts.map(async workout => {
 
@@ -47,7 +49,7 @@ export const PlanProvider = ({ children }) => {
 
             const {exercises, ...workoutWithoutExercises} = workout;
 
-            const formattedExercise = exercises.map(exercise => {
+            const formattedExercises = exercises.map(exercise => {
                 return {
                     id: exercise.info.id,
                     workout_id: workout.id,
@@ -63,7 +65,8 @@ export const PlanProvider = ({ children }) => {
                 }
             });
 
-            await updatePlanWorkout({workout: workoutWithoutExercises, exercises: formattedExercise}, id, workout.id);
+            console.log(formattedExercises);
+            await updatePlanWorkout({workout: workoutWithoutExercises, exercises: formattedExercises}, id, workout.id);
         }))
 
     },
@@ -116,7 +119,9 @@ export const PlanProvider = ({ children }) => {
                 exercises: workout.exercises
             };
 
-        })
+        });
+
+        console.log(formattedPlan);
 
         updatePlanMutation.mutate({updatedPlan: formattedPlan.plan, updatedWorkouts: formattedPlan.workouts, id: editPlan.id});
 
