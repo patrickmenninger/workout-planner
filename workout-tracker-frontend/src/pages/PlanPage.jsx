@@ -28,6 +28,10 @@ const PlanPage = () => {
                 <h1>{currPlan.name}</h1>
                 <div> </div>
             </div>
+            <div className="m-3">
+                <div>Notes</div>
+                <div className="text-text-secondary">{currPlan.notes}</div>
+            </div>
             {
                 currPlan?.workouts.sort((a, b) => a.order_index - b.order_index).map(currWorkout => {
 

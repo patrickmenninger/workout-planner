@@ -29,10 +29,6 @@ const TrainingPage = () => {
         }
     })
 
-    function test() {
-        console.log(enhancedPlans);
-    }
-
     const handleCreateWorkout = () => {
         openWorkoutForEdit('create', { name: 'New Workout', notes: "", exercises: [] });
     };
@@ -48,7 +44,6 @@ const TrainingPage = () => {
         <>
         <Tabs defaultActiveKey="plans" justify className="bg-side-900">
             <Tab eventKey="plans" title="Plans">
-                <Button onClick={test}>TEST</Button>
                 <div className="my-3 flex justify-content-center">
                     <Button onClick={handleCreatePlan} className="w-50">Create Plan</Button>
                 </div>
@@ -68,10 +63,13 @@ const TrainingPage = () => {
                 </div>
                 <h1 className="m-3">Workouts</h1>
                 {
-                    workouts && workouts.map(workout =>
+                    workouts && workouts.map(workout => {
+                        return (
                         <div  key={workout.id}>
                             <Workout workout={workout} drop="end"/>
                         </div>
+                        )
+                    }
                     )
                 }
             </Tab>

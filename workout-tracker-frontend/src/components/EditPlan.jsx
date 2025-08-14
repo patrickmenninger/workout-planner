@@ -27,6 +27,7 @@ const EditPlan = ({mode = 'create'}) => {
     }, [editPlan?.workouts, mode]);
 
     const handleCreateWorkout = () => {
+        console.log("CREATE", workouts);
         openForEdit('create', { name: 'New Workout', notes: "", exercises: [], order_index: (workouts.length + 1) }, editPlan.id);
     };
 
@@ -34,6 +35,8 @@ const EditPlan = ({mode = 'create'}) => {
     async function addWorkouts(newWorkouts) {
 
         let orderIdx = workouts.length;
+        console.log("BFEORE", workouts);
+        console.log("OREDER", orderIdx);
         const newFormattedWorkouts = newWorkouts.map(workout => {
 
             workout.order_index = ++orderIdx;
@@ -44,6 +47,7 @@ const EditPlan = ({mode = 'create'}) => {
         });
 
         const updatedWorkouts = [...workouts, ...newFormattedWorkouts];
+        console.log("UPDATED", updatedWorkouts);
         setWorkouts(updatedWorkouts);
         
         setEditPlan((prev) => {
@@ -55,13 +59,8 @@ const EditPlan = ({mode = 'create'}) => {
 
     }
 
-    function test(){
-        console.log(editPlan);
-    }
-
     return (
         <div style={{color: "var(--color-text-primary"}}>
-            <Button onClick={test}>TEST</Button>
             <Button onClick={handleCreateWorkout}>Create Workout</Button>
             {
                 workouts && workouts.sort((a, b) => a.order_index - b.order_index).map((workout, workoutIndex) => {

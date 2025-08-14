@@ -185,7 +185,7 @@ export const WorkoutProvider = ({ children }) => {
 
         // Call Route in update workout mutation, invalidate all queries
         console.log(planId);
-        if (planId !== -1 && planId !== null) {
+        if (planId > 0) {
 
             editWorkout.name = name;
             editWorkout.notes = notes;

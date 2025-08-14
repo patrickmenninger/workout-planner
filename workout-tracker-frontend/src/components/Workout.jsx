@@ -2,11 +2,9 @@ import { Dropdown } from "react-bootstrap"
 import { useEditWorkout } from "../context/WorkoutContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteWorkout } from "../services/WorkoutService.mjs";
 import { Card, Button } from "./Tags";
-import { useWorkouts } from "../hooks/useWorkoutsData.mjs";
 import { usePlanWorkouts } from "../hooks/usePlansData.mjs";
 import { useEditPlan } from "../context/PlanContext";
 
@@ -36,9 +34,16 @@ const Workout = ({workout, drop, planId = null}) => {
     })
     const handleDeleteWorkout = () => {
         if (planId > 0) {
+
             setEditPlan((prev) => {
+
                 const updatedPlan = {...prev};
                 updatedPlan.workouts = prev.workouts.filter(currWorkout => currWorkout.id !== workout.id);
+
+                updatedPlan.workouts = updatedPlan.workouts.map((workout, i) => ({
+                    ...workout,
+                    order_index: i + 1
+                }));
 
                 return updatedPlan;
             })
@@ -77,10 +82,10 @@ const Workout = ({workout, drop, planId = null}) => {
                     {
                     fullWorkout.exercises
                         ?.sort((a, b) => a.info.order_index - b.info.order_index)
-                        .map(exercise => {
+                        .map((exercise, idx) => {
 
                             return (
-                                <div key={workout.id + " " + exercise.info.id} className="flex justify-content-between">
+                                <div key={idx} className="flex justify-content-between">
                                     <span className={exercise.info.time && exercise.info.distance ? "self-center" : ""}>{exercise.model.name}</span>
                                     <div>
                                         {exercise.info.reps && <span>Sets: {exercise.info.reps.length}</span>}
